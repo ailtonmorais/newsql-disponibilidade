@@ -12,7 +12,8 @@
 # Índice
 * [Introdução](#introducao)    
 	* [MySQL Cluster](#sobre-mysqlcluster)
-	* [CockroachDB](#sobre-cockroachdb)	
+	* [CockroachDB](#sobre-cockroachdb)
+    * [Estudo de Caso](#caso)	
 * [Visão Geral](#geral)
 	* [Alta Disponibilidade](#disponibilidade)
     	* [MySQL Cluster](#disponibilidade-mysqlcluster)
@@ -35,16 +36,40 @@
 A proposta do tutorial é apresentar o passo a passo desde a instalação, configuração, casos de uso e testes que irão ajudar a entender a abordagem da **disponibilidade** do [MySQL Cluster](https://www.mysql.com/products/cluster/) & [CockroachDB](https://www.cockroachlabs.com/product/)
 
 <a id="sobre-mysqlcluster"></a>
-## MySQL Cluster
+### MySQL Cluster
 
 MySQL Cluster é o banco de dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
 
 O Cluster MySQL tem replicação entre clusters em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
 
 <a id="sobre-cockroachdb"></a>
-## CockroachDB
+### CockroachDB
 
 CockroachDB é um banco de dados SQL distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de datacenter com interrupção de latência mínima e sem intervenção manual, suporta transações ACID fortemente consistentes e fornece uma API SQL familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
+
+<a id="caso"></a>
+### Estudo de Caso
+
+Neste tutorial será utilizado o Banco de Dados do Northwind que foi criado pela Microsoft para atender os seus produtos, mas ao longo do tempo se tornou uma amostra bastante utilizada em tutoriais de Banco de Dados não desenvolvidos pela Microsoft. Dentre as amostras do Banco de Dados Northwind podemos destacar:
+
+* Suppliers
+  
+* Customers
+  
+* Employees
+  
+* Products
+  
+* Shippers
+  
+* Orders
+
+No total o Banco de Dados Northwind contém 14 tabelas. O diagrama com o relacionamento entre as tabelas pode ser visto abaixo:
+
+<p align="center">
+<img src="./images/northwind-er-diagram.png" width="974">
+<br>Figura 1: Diagram ER. Fonte: [(YugabyteDB 2020a)](#YugabyteDB-2020a)</br>
+</p>
 
 <a id="geral"></a>
 # Visão Geral
@@ -158,7 +183,7 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
-<br>Figura 1: Sem um único ponto de falha, o MySQL Cluster oferece extrema resiliência a falhas. Fonte: [(MySQL 2020b)](#MySQL-2020b)</br>
+<br>Figura 2: Sem um único ponto de falha, o MySQL Cluster oferece extrema resiliência a falhas. Fonte: [(MySQL 2020b)](#MySQL-2020b)</br>
 </p>
 
 <a id="resiliencia-cockroachdb"></a>
@@ -168,7 +193,7 @@ Quando você estiver pronto para executar o seu sistema em produção em uma ún
 
 <p align="center">
 <img src="./images/topology_basic_production_v1.png" width="960">
-<br>Figura 2: Topologia Básica. Fonte: [(Cockroach 2020c)](#Cockroach-2020c)</br>
+<br>Figura 3: Topologia Básica. Fonte: [(Cockroach 2020c)](#Cockroach-2020c)</br>
 </p>
 
 <a id="referencias"></a>
@@ -191,6 +216,9 @@ Quando você estiver pronto para executar o seu sistema em produção em uma ún
 
 <a id="Cockroach-2020c"></a>
 - Cockroach Labs. [Architecture Overview, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h35m.
+
+<a id="YugabyteDB-2020a"></a>
+- YugabyteDB. [YugabyteDB, 2020a](https://docs.yugabyte.com/latest/sample-data/northwind/). Acesso em 29 dez 2020 às 10h15m.
   
 <a id="Krco-2013"></a>
 - Krco, Srdjan, et al. [Comic book](https://iotcomicbook.files.wordpress.com/2013/10/iot_comic_book_special_br.pdf). The internet of things, 2012, p. 15. Acesso em 21 dez 2020 às 21h10m.
