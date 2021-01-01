@@ -68,7 +68,7 @@ No total o Banco de Dados Northwind contém 14 tabelas. O diagrama com o relacio
 
 <p align="center">
 <img src="./images/northwind-er-diagram.png" width="974">
-<br>Figura 1: Diagram ER. Fonte: [(YugabyteDB 2020a)](#YugabyteDB-2020a)</br>
+<br>Figura 1: Diagram ER. Fonte: (YugabyteDB 2020a)</br>
 </p>
 
 <a id="geral"></a>
@@ -183,7 +183,7 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
-<br>Figura 2: Sem um único ponto de falha, o MySQL Cluster oferece extrema resiliência a falhas. Fonte: [(MySQL 2020b)](#MySQL-2020b)</br>
+<br>Figura 2: Sem um único ponto de falha, o MySQL Cluster oferece extrema resiliência a falhas. Fonte: (MySQL 2020b)</br>
 </p>
 
 <a id="resiliencia-cockroachdb"></a>
@@ -193,7 +193,7 @@ Quando você estiver pronto para executar o seu sistema em produção em uma ún
 
 <p align="center">
 <img src="./images/topology_basic_production_v1.png" width="960">
-<br>Figura 3: Topologia Básica. Fonte: [(Cockroach 2020c)](#Cockroach-2020c)</br>
+<br>Figura 3: Topologia Básica. Fonte: (Cockroach 2020c)</br>
 </p>
 
 <a id="referencias"></a>
