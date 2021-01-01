@@ -149,17 +149,27 @@ Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal
 <a id="resiliencia"></a>
 # Resiliência a Falhas
 
-A confiabiliade de um sistema gerenciador de Banco de Dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdiMydos [...]
+A confiabiliade de um sistema gerenciador de Banco de Dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
 
 <a id="resiliencia-mysqlcluster"></a>
 ## MySQL Cluster
 
 No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
 
+<p align="center">
+<img src="./images/mysql_cluster_availability_v1.png" width="867">
+<br>Figura 1: Sem um único ponto de falha, o MySQL Cluster oferece extrema resiliência a falhas. Fonte: [(MySQL 2020b)](#MySQL-2020b)</br>
+</p>
+
 <a id="resiliencia-cockroachdb"></a>
 ## CockroachDB
 
-My
+Quando você estiver pronto para executar o seu sistema em produção em uma única região, é importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [(Cockroach 2020c)](#Cockroach-2020c).
+
+<p align="center">
+<img src="./images/topology_basic_production_v1.png" width="960">
+<br>Figura 2: Topologia Básica. Fonte: [(Cockroach 2020c)](#Cockroach-2020c)</br>
+</p>
 
 <a id="referencias"></a>
 # Referências Bibliográficas
@@ -178,6 +188,9 @@ My
 
 <a id="Cockroach-2020b"></a>
 - Cockroach Labs. [Architecture Overview, 2020b](https://www.cockroachlabs.com/docs/stable/architecture/overview.html). Acesso em 17 out 2020 às 15h30m.
+
+<a id="Cockroach-2020c"></a>
+- Cockroach Labs. [Architecture Overview, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h35m.
   
 <a id="Krco-2013"></a>
 - Krco, Srdjan, et al. [Comic book](https://iotcomicbook.files.wordpress.com/2013/10/iot_comic_book_special_br.pdf). The internet of things, 2012, p. 15. Acesso em 21 dez 2020 às 21h10m.
