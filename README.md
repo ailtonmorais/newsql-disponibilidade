@@ -21,7 +21,7 @@
 * [Resiliência a Falhas](#resiliencia)	
     * [MySQL Cluster](#resiliencia-mysqlcluster)
     * [CockroachDB](#resiliencia-cockroachdb)
-* [Instalação](#instalacao)
+* [Instalação e Configuração](#instalacao)
 	* [Docker](#instalacao-docker)
 	* [MySQL Cluster](#instalacao-mysqlcluster)
 	* [CockroachDB](#instalacao-cockroachdb)
@@ -196,12 +196,12 @@ Quando você estiver pronto para executar o seu sistema em produção em uma ún
 <br>Figura 3: Topologia Básica. Fonte: (Cockroach 2020c)</br>
 </p>
 
-<a id="intalacao"></a>
-## Instalação
+<a id="instalacao"></a>
+## Instalação e Configuração
 
-A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição Linux Desktop conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/).  
+A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição Linux Desktop conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/). É importante lembrar que os Banco de Dados **MySQL Cluster** e **CockroachDB** serão instalados no **Docker**.   
 
-<a id="intalacao-docker"></a>
+<a id="instalacao-docker"></a>
 ### Docker
 
 O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada. Siga as instruções abaixo para instalação [(Digitalocean 2020a)](#Digitalocean-2020a).
@@ -242,13 +242,13 @@ $ sudo apt update
 $ sudo apt install docker-ce
 ```
 
-6. Neste o ponto o Docker deve ser instalado, o deamon iniciado e o processo ativado. Verifique executando o comando abaixo:
+7. Neste o ponto o Docker deve ser instalado, o deamon iniciado e o processo ativado. Verifique executando o comando abaixo:
 
 ```bash
 $ sudo systemctl status docker
 ```
 
-7. Confirme se o comando executado acima mostra o serviço como ativo, conforme exibido abaixo:
+8. Confirme se o comando executado acima mostra o serviço como ativo, conforme exibido abaixo:
 
 ```bash
 Output
@@ -262,6 +262,197 @@ Output
            ├─10096 /usr/bin/dockerd -H fd://
            └─10113 docker-containerd --config /var/run/docker/containerd/containerd.toml
 ```
+
+<a id="instalacao-mysqlcluster"></a>
+### MySQL Cluster
+
+Nesta seção será mostrado o processo de instalação e configuração da versão 8.0 do [MySQL Cluster](https://dev.mysql.com/doc/refman/8.0/en/mysql-cluster.html) no **Docker**. Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes SQL. Cada node será executado em *hosts* separados usando a configuração de rede do Docker. Utilizaremos comandos do **git**, se for necessário [clique aqui](https://gist.github.com/leocomelli/2545add34e4fec21ec16) para obter mais detalhes. Siga os passos abaixo [(Medium 2020a)](#Medium-2020a). 
+
+1. Configure a *subnet* no Docker:
+
+```bash
+$ docker network create cluster --subnet=10.100.0.0/16
+```
+
+2. Clone o MySQL do repositório oficial:
+
+```bash
+$ sudo git clone https://github.com/mysql/mysql-docker.git
+```
+
+3. Acesse o diretório do MySQL cluster que foi criado:
+
+```bash
+$ sudo cd mysql-docker/
+```
+
+4. Crie um novo *branch*:
+
+```bash
+$ sudo git checkout mysql-cluster
+```
+
+5. Abra o arquivo "8.0/cnf/mysql-cluster.cnf" e configure conforme abaixo:
+
+```bash 
+[ndb_mgmd]
+NodeId=1
+hostname=10.100.0.2
+datadir=/var/lib/mysql
+
+[ndbd]
+NodeId=2
+hostname=10.100.0.3
+datadir=/var/lib/mysql
+
+[ndbd]
+NodeId=3
+hostname=10.100.0.4
+datadir=/var/lib/mysql
+
+[mysqld]
+NodeId=4
+hostname=10.100.0.10
+
+[mysqld]
+NodeId=5
+hostname=10.100.0.11
+```
+
+6. Abra o arquivo "8.0/cnf/my.cnf" e configure conforme abaixo:
+
+```bash
+[mysqld]
+ndbcluster
+ndb-connectstring=10.100.0.2
+user=mysql
+
+[mysql_cluster]
+ndb-connectstring=10.100.0.2
+```
+
+6. Crie a imagem no Docker (docker build -t <image_name> <Path to docker file>):
+
+```bash
+$ docker build -t mysql-cluster /opt/mysql-docker/8.0/
+```
+Após concluir todos os passos citados acima podemos iniciar o processo de criação dos nodes do cluster.
+
+7. Crie o node de gerenciamento com o nome management1 e IP 10.100.0.2:
+
+```bash
+$ docker run -d --net=cluster --name=management1 --ip=10.100.0.2 mysql-cluster ndb_mgmd
+```
+
+8. Crie os 2 nodes de dados:
+
+```bash
+$ docker run -d --net=cluster --name=ndb1 --ip=10.100.0.3 mysql-cluster ndbd
+$ docker run -d --net=cluster --name=ndb2 --ip=10.100.0.4 mysql-cluster ndbd
+```
+
+9. Crie os 2 nodes de SQL:
+
+```bash
+$ docker run -d --net=cluster --name=mysql1 --ip=10.100.0.10 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
+$ docker run -d --net=cluster --name=mysql2 --ip=10.100.0.11 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
+```
+
+10. Execute o comando abaixo para acessar a console cluster:
+
+```bash
+$ docker run -it --net=cluster mysql-cluster ndb_mgm
+```
+
+A console de gerenciamento do cluster será iniciada.
+
+```bash
+[Entrypoint] MySQL Docker Image 8.0.22-1.1.18-cluster
+[Entrypoint] Starting ndb_mgm
+-- NDB Cluster -- Management Client --
+ndb_mgm>
+```
+
+11. Execute o comando "show" para verificar o status dos nodes do cluster:
+
+```bash
+ndb_mgm> show
+```
+
+Confirme se todos os nodes estão em execução.
+
+```bash
+Connected to Management Server at: 10.100.0.2:1186
+Cluster Configuration
+---------------------
+[ndbd(NDB)]	2 node(s)
+id=2	@10.100.0.3  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0, *)
+id=3	@10.100.0.4  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0)
+
+[ndb_mgmd(MGM)]	1 node(s)
+id=1	@10.100.0.2  (mysql-8.0.22 ndb-8.0.22)
+
+[mysqld(API)]	2 node(s)
+id=4	@10.100.0.10  (mysql-8.0.22 ndb-8.0.22)
+id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
+
+ndb_mgm>
+```
+
+Na sequência vamos configurar os nodes mysql para que permitir o login remoto no Banco de Dados. Os nodes sql foram criados com senha randômica.
+
+12. Recupere a senha padrão do 1° node mysql (docker logs <node_name> 2>&1 | grep PASSWORD):
+
+```bash
+$ docker logs mysql1 2>&1 | grep PASSWORD
+```
+
+A senha randômica padrão será exibida.
+
+```bash
+[Entrypoint] GENERATED ROOT PASSWORD: EaXaS)eWyx%eLULiM0c@HAMoNXLu
+```
+
+13. Acesse o 1° node mysql (docker exec -it <node_name> mysql -uroot -p):
+
+```bash
+$ docker exec -it mysql1 mysql -uroot -p
+```
+
+14. Digite a senha padrão do 1° node mysql:
+
+```bash
+$ Enter password:
+```
+
+O console do 1° node do mysql será exibido.
+
+```bash
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 79
+Server version: 8.0.22-cluster MySQL Cluster Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+```
+
+15. Altere a senha padrão do 1° node mysql:
+
+```bash
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass'; 
+```
+
+16. Atualize os previlégios de acesso:
+
+```bash
+mysql> flush privileges; 
+```
+Repita os passos 12 a 16 para o 2° node mysql do cluster.
 
 <a id="referencias"></a>
 # Referências Bibliográficas
@@ -289,6 +480,12 @@ Output
   
 <a id="Digitalocean-2020a"></a>
 - Digitalocean. [Digitalocean, 2020a](https://www.digitalocean.com/community/tutorials/como-instalar-e-usar-o-docker-no-ubuntu-18-04-pt). Acesso em 29 dez 2020 às 11h00m.
+
+<a id="Medium-2020a"></a>
+- Medium. [Medium, 2020a](https://medium.com/@menakajayawardena/how-to-deploy-a-mysql-cluster-from-scratch-with-docker-a2452a56fc33). Acesso em 30 dez 2020 às 13h45m.
+
+<a id="GithubGist-2020a"></a>
+- GithubGist. [GithubGist, 2020a](https://gist.github.com/leocomelli/2545add34e4fec21ec16). Acesso em 30 dez 2020 às 14h05m.
   
 <a id="Krco-2013"></a>
 - Krco, Srdjan, et al. [Comic book](https://iotcomicbook.files.wordpress.com/2013/10/iot_comic_book_special_br.pdf). The internet of things, 2012, p. 15. Acesso em 21 dez 2020 às 21h10m.
