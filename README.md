@@ -204,7 +204,14 @@ A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema ope
 <a id="instalacao-docker"></a>
 ### Docker
 
-O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada. Siga as instruções abaixo para instalação [(Digitalocean 2020a)](#Digitalocean-2020a).
+O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada.
+
+<p align="center">
+<img src="./images/docker_logo.png" width="600">
+<br>Figura 4: Docker logo. Fonte: (Docker 2020a)</br>
+</p>
+
+Siga as instruções abaixo para instalação [(Digitalocean 2020a)](#Digitalocean-2020a).
 
 1. Execute o comando de atualização para garantir as listas de fontes mais recentes:
 
@@ -266,7 +273,21 @@ Output
 <a id="instalacao-mysqlcluster"></a>
 ### MySQL Cluster
 
-Nesta seção será mostrado o processo de instalação e configuração da versão 8.0 do [MySQL Cluster](https://dev.mysql.com/doc/refman/8.0/en/mysql-cluster.html) no **Docker**. Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes SQL. Cada node será executado em *hosts* separados usando a configuração de rede do Docker. Utilizaremos comandos do **git**, se for necessário [clique aqui](https://gist.github.com/leocomelli/2545add34e4fec21ec16) para obter mais detalhes. Siga os passos abaixo [(Medium 2020a)](#Medium-2020a). 
+Nesta seção será mostrado o processo de instalação e configuração da versão 8.0 do [MySQL Cluster](https://dev.mysql.com/doc/refman/8.0/en/mysql-cluster.html) no **Docker**. Cada node será executado em *hosts* separados usando a configuração de rede do Docker. Utilizaremos comandos do **git**, se for necessário [clique aqui](https://gist.github.com/leocomelli/2545add34e4fec21ec16) para obter mais detalhes.
+
+<p align="center">
+<img src="./images/mysql_docker.png" width="694">
+<br>Figura 5: MySQL Docker logo. Fonte: (Medium 2020a)</br>
+</p>
+
+Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes SQL conforme ilustrado na imagem abaixo.
+
+<p align="center">
+<img src="./images/NDB-cluster-diagram.jpeg" width="505">
+<br>Figura 6: NDB Cluster Diagram. Fonte: (Medium 2020a)</br>
+</p>
+
+Siga os passos abaixo para instalação e configuração do MySQL Cluster [(Medium 2020a)](#Medium-2020a).
 
 1. Configure a *subnet* no Docker:
 
@@ -331,34 +352,34 @@ user=mysql
 ndb-connectstring=10.100.0.2
 ```
 
-6. Crie a imagem no Docker (docker build -t <image_name> <Path to docker file>):
+7. Crie a imagem no Docker (docker build -t <image_name> <Path to docker file>):
 
 ```bash
 $ docker build -t mysql-cluster /opt/mysql-docker/8.0/
 ```
 Após concluir todos os passos citados acima podemos iniciar o processo de criação dos nodes do cluster.
 
-7. Crie o node de gerenciamento com o nome management1 e IP 10.100.0.2:
+8. Crie o node de gerenciamento com o nome management1 e IP 10.100.0.2:
 
 ```bash
 $ docker run -d --net=cluster --name=management1 --ip=10.100.0.2 mysql-cluster ndb_mgmd
 ```
 
-8. Crie os 2 nodes de dados:
+9. Crie os 2 nodes de dados:
 
 ```bash
 $ docker run -d --net=cluster --name=ndb1 --ip=10.100.0.3 mysql-cluster ndbd
 $ docker run -d --net=cluster --name=ndb2 --ip=10.100.0.4 mysql-cluster ndbd
 ```
 
-9. Crie os 2 nodes de SQL:
+10. Crie os 2 nodes de SQL:
 
 ```bash
 $ docker run -d --net=cluster --name=mysql1 --ip=10.100.0.10 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
 $ docker run -d --net=cluster --name=mysql2 --ip=10.100.0.11 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
 ```
 
-10. Execute o comando abaixo para acessar a console cluster:
+11. Execute o comando abaixo para acessar a console cluster:
 
 ```bash
 $ docker run -it --net=cluster mysql-cluster ndb_mgm
@@ -373,7 +394,7 @@ A console de gerenciamento do cluster será iniciada.
 ndb_mgm>
 ```
 
-11. Execute o comando "show" para verificar o status dos nodes do cluster:
+12. Execute o comando "show" para verificar o status dos nodes do cluster:
 
 ```bash
 ndb_mgm> show
@@ -401,7 +422,7 @@ ndb_mgm>
 
 Na sequência vamos configurar os nodes mysql para que permitir o login remoto no Banco de Dados. Os nodes sql foram criados com senha randômica.
 
-12. Recupere a senha padrão do 1° node mysql (docker logs <node_name> 2>&1 | grep PASSWORD):
+13. Recupere a senha padrão do 1° node mysql (docker logs <node_name> 2>&1 | grep PASSWORD):
 
 ```bash
 $ docker logs mysql1 2>&1 | grep PASSWORD
@@ -413,13 +434,13 @@ A senha randômica padrão será exibida.
 [Entrypoint] GENERATED ROOT PASSWORD: EaXaS)eWyx%eLULiM0c@HAMoNXLu
 ```
 
-13. Acesse o 1° node mysql (docker exec -it <node_name> mysql -uroot -p):
+14. Acesse o 1° node mysql (docker exec -it <node_name> mysql -uroot -p):
 
 ```bash
 $ docker exec -it mysql1 mysql -uroot -p
 ```
 
-14. Digite a senha padrão do 1° node mysql:
+15. Digite a senha padrão do 1° node mysql:
 
 ```bash
 $ Enter password:
@@ -441,18 +462,18 @@ owners.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 ```
 
-15. Altere a senha padrão do 1° node mysql:
+16. Altere a senha padrão do 1° node mysql:
 
 ```bash
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass'; 
 ```
 
-16. Atualize os previlégios de acesso:
+17. Atualize os privilégios de acesso:
 
 ```bash
 mysql> flush privileges; 
 ```
-Repita os passos 12 a 16 para o 2° node mysql do cluster.
+Repita os passos 13 a 17 para o 2° node mysql do cluster.
 
 <a id="referencias"></a>
 # Referências Bibliográficas
@@ -477,6 +498,9 @@ Repita os passos 12 a 16 para o 2° node mysql do cluster.
 
 <a id="YugabyteDB-2020a"></a>
 - YugabyteDB. [YugabyteDB, 2020a](https://docs.yugabyte.com/latest/sample-data/northwind/). Acesso em 29 dez 2020 às 10h15m.
+
+<a id="Docker-2020a"></a>
+- Docker. [Docker, 2020a](https://www.docker.com/). Acesso em 29 dez 2020 às 10h50m.
   
 <a id="Digitalocean-2020a"></a>
 - Digitalocean. [Digitalocean, 2020a](https://www.digitalocean.com/community/tutorials/como-instalar-e-usar-o-docker-no-ubuntu-18-04-pt). Acesso em 29 dez 2020 às 11h00m.
