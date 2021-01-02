@@ -31,7 +31,7 @@
 * [Referências Bibliográficas](#referencias)
 
 <a id="introducao"></a>
-# Introdução
+## Introdução
 
 A proposta do tutorial é apresentar o passo a passo desde a instalação, configuração, casos de uso e testes que irão ajudar a entender a abordagem da **disponibilidade** do [MySQL Cluster](https://www.mysql.com/products/cluster/) & [CockroachDB](https://www.cockroachlabs.com/product/)
 
@@ -72,7 +72,7 @@ No total o Banco de Dados Northwind contém 14 tabelas. O diagrama com o relacio
 </p>
 
 <a id="geral"></a>
-# Visão Geral
+## Visão Geral
 
 Os Bancos de Dados relacionais surguiram para necessidade de armazenamento de dados, mas na época não tinhamos as tecnologias Web e os diversos tipos de dispositivos que geram enorme quantidade de dados atualmente.
 
@@ -135,12 +135,12 @@ Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) as três categorias que melhor repre
 Certamente podemos considerar que os sistemas de Banco de Dados NewSQL conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [KAUR, 2017](#Kaur-2017) o NewSQL deve ser considerado como uma alternativa ao NoSQL ou banco de dados relacional clássico para novos aplicativos OLTP.
 
 <a id="disponibilidade"></a>
-# Alta Disponibilidade
+## Alta Disponibilidade
 
 A alta disponibilidade não está relacionada somente ao tempo que um sistema está acessível, mas também ao tempo que o sistema precisa para responder às solicitações dos usuários. Geralmente além dos testes é necessário prover componentes redundantes para obter um nível de disponibilidade alta mesmo em caso de falhas em parte da infra-estrutura.
 
 <a id="disponibilidade-mysqlcluster"></a>
-## MySQL Cluster
+### MySQL Cluster
 
 Para garantir a alta disponibilidade o MySQL Cluster se apoia em (MySQL 2020b):
 
@@ -155,7 +155,7 @@ Para garantir a alta disponibilidade o MySQL Cluster se apoia em (MySQL 2020b):
 * **Replicação geográfica**: A replicação geográfica permite que os nós sejam espelhados em data centers remotos para recuperação de desastres.
 
 <a id="disponibilidade-cockroachdb"></a>
-## CockroachDB
+### CockroachDB
 
 Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade (Cockroach Labs 2020b):
 
@@ -172,12 +172,12 @@ Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal
 * **Disponibilidade Multi-ativa**: O consenso de alta disponibilidade permite que cada nó no cluster controle leituras e gravações para um subconjunto dos dados armazenados (em uma base por intervalo).
 
 <a id="resiliencia"></a>
-# Resiliência a Falhas
+## Resiliência a Falhas
 
 A confiabiliade de um sistema gerenciador de Banco de Dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
 
 <a id="resiliencia-mysqlcluster"></a>
-## MySQL Cluster
+### MySQL Cluster
 
 No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
 
@@ -187,7 +187,7 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 </p>
 
 <a id="resiliencia-cockroachdb"></a>
-## CockroachDB
+### CockroachDB
 
 Quando você estiver pronto para executar o seu sistema em produção em uma única região, é importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [(Cockroach 2020c)](#Cockroach-2020c).
 
