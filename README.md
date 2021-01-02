@@ -206,17 +206,62 @@ A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema ope
 
 O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada. Siga as instruções abaixo para instalação [(Digitalocean 2020a)](#Digitalocean-2020a).
 
-* Execute o comando de atualização para garantir as listas de fontes mais recentes
+1. Execute o comando de atualização para garantir as listas de fontes mais recentes:
 
 ```bash
 $ sudo apt update
 ```
 
-* Instale os pacotes de pré-requisitos para garantir que o **apt** utilize pacotes via HTTPS
+2. Instale os pacotes de pré-requisitos para garantir que o **apt** utilize pacotes via HTTPS:
 
+```bash
 $ sudo apt install apt-transport-https ca-certificates curl software-properties-common
+```
 
-Na sequencia
+3. Adicione a chave GPG para o repositório oficial do Docker em seu sistema:
+
+```bash
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+```
+
+4. Adicione o repositório do Docker as fontes do APT:
+
+```bash
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+```
+
+5. Execute o comando de atualização para garantir as listas de fontes mais recentes:
+
+```bash
+$ sudo apt update
+```
+
+6. Instale o Docker:
+
+```bash
+$ sudo apt install docker-ce
+```
+
+6. Neste o ponto o Docker deve ser instalado, o deamon iniciado e o processo ativado. Verifique executando o comando abaixo:
+
+```bash
+$ sudo systemctl status docker
+```
+
+7. Confirme se o comando executado acima mostra o serviço como ativo, conforme exibido abaixo:
+
+```bash
+Output
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2018-07-05 15:08:39 UTC; 2min 55s ago
+     Docs: https://docs.docker.com
+ Main PID: 10096 (dockerd)
+    Tasks: 16
+   CGroup: /system.slice/docker.service
+           ├─10096 /usr/bin/dockerd -H fd://
+           └─10113 docker-containerd --config /var/run/docker/containerd/containerd.toml
+```
 
 <a id="referencias"></a>
 # Referências Bibliográficas
