@@ -196,6 +196,28 @@ Quando você estiver pronto para executar o seu sistema em produção em uma ún
 <br>Figura 3: Topologia Básica. Fonte: (Cockroach 2020c)</br>
 </p>
 
+<a id="intalacao"></a>
+## Instalação
+
+A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição Linux Desktop conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/).  
+
+<a id="intalacao-docker"></a>
+### Docker
+
+O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada. Siga as instruções abaixo para instalação [(Digitalocean 2020a)](#Digitalocean-2020a).
+
+* Execute o comando de atualização para garantir as listas de fontes mais recentes
+
+```bash
+$ sudo apt update
+```
+
+* Instale os pacotes de pré-requisitos para garantir que o **apt** utilize pacotes via HTTPS
+
+$ sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+Na sequencia
+
 <a id="referencias"></a>
 # Referências Bibliográficas
 
@@ -219,6 +241,9 @@ Quando você estiver pronto para executar o seu sistema em produção em uma ún
 
 <a id="YugabyteDB-2020a"></a>
 - YugabyteDB. [YugabyteDB, 2020a](https://docs.yugabyte.com/latest/sample-data/northwind/). Acesso em 29 dez 2020 às 10h15m.
+  
+<a id="Digitalocean-2020a"></a>
+- Digitalocean. [Digitalocean, 2020a](https://www.digitalocean.com/community/tutorials/como-instalar-e-usar-o-docker-no-ubuntu-18-04-pt). Acesso em 29 dez 2020 às 11h00m.
   
 <a id="Krco-2013"></a>
 - Krco, Srdjan, et al. [Comic book](https://iotcomicbook.files.wordpress.com/2013/10/iot_comic_book_special_br.pdf). The internet of things, 2012, p. 15. Acesso em 21 dez 2020 às 21h10m.
