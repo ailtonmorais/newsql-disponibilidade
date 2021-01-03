@@ -25,6 +25,9 @@
 	* [Docker](#instalacao-docker)
 	* [MySQL Cluster](#instalacao-mysqlcluster)
 	* [CockroachDB](#instalacao-cockroachdb)
+* [Disponibilidade na Prática](#pratica)
+	* [MySQL Cluster](#pratica-mysqlcluster)
+	* [CockroachDB](#pratica-cockroachdb)
 * [Conclusão](#conclusao)
 	* [Resumo](#resumo)
 * [Glossário](#glossario)
@@ -593,6 +596,583 @@ clusterID:           ‹fc1b7739-d5bd-4e2b-a2b6-6d93ae12bc9a›
 ```
 
 **Caso seja necessário, repita o passo 6 para acessar o 2° e 3° node do cockroach.** 
+
+<a id="pratica"></a>
+## Disponibilidade na Prática
+
+A disponibilidade é um fator crítico que deve ser considerado ao escolher um Banco de Dados. Certamente diversos fatores podem influenciar nesta escolha, mas conforme já foi detalhado ao longo deste material temos fatores importantes que tornam o Banco de Dados mais resiliente e disponível sempre que seja necessário consultar os dados. 
+
+Nas seções anteriores megulhamos em todas as características relevantes dos Bancos de Dados que foram escolhidos para este tutorial e foi mostrado com detalhes os passos para instalação e configuração de cada um deles.
+
+A disponibilidade do Banco de Dados é um processo que envolve a melhor escolha possível para o negócio em questão, uma boa definição da Arquitetura e infra-estrutura adequada. A partir de agora vamos mostrar a disponibilidade com foco na redundância, já que construimos este caminho tendo uma estrutura resiliente e redundante para os Banco de Dados deste estudo. 
+
+<a id="pratica-mysqlcluster"></a>
+### MySQL Cluster
+
+Na seção de [(Alta Disponibilidade)](#disponibilidade), foi mostrado que o MySQL Cluster se apoia na replicação, failover automático, autocorreção, arquitetura sem compartilhamento e replicação geográfica para garantir um alto nível de disponibilidade. Acompanhe na prática alguns destes conceitos:
+
+1. **Replicação** - A replicação é realizada de forma síncrona para os nós de dados. É importante lembrar que temos 2 nós de dados e 2 nós SQL que são podem ser acessados diretamente pelas aplicações dependente da arquitetura de acesso que será definida. Para confirmar os nodes existentes execute o comando abaixo.
+
+```bash
+$ docker ps
+```
+O resultado deve ser similar ao resultado mostrado.
+
+```bash
+CONTAINER ID   IMAGE           COMMAND                  CREATED       STATUS                          PORTS                                     NAMES
+ba2c07ad51da   mysql-cluster   "/entrypoint.sh mysq…"   3 weeks ago   Up About a minute (healthy)     1186/tcp, 2202/tcp, 3306/tcp, 33060/tcp   mysql2
+56887df6ca9b   mysql-cluster   "/entrypoint.sh mysq…"   3 weeks ago   Up About a minute (healthy)     1186/tcp, 2202/tcp, 3306/tcp, 33060/tcp   mysql1
+49b02cc3e06a   mysql-cluster   "/entrypoint.sh ndbd"    3 weeks ago   Up About a minute (unhealthy)   1186/tcp, 2202/tcp, 3306/tcp, 33060/tcp   ndb2
+c5e38486e34f   mysql-cluster   "/entrypoint.sh ndbd"    3 weeks ago   Up About a minute (unhealthy)   1186/tcp, 2202/tcp, 3306/tcp, 33060/tcp   ndb1
+7b81a0345ee7   mysql-cluster   "/entrypoint.sh ndb_…"   3 weeks ago   Up About a minute (unhealthy)   1186/tcp, 2202/tcp, 3306/tcp, 33060/tcp   management1
+```
+
+Também é possível acessar o console de gerenciamento do Mysql Cluster. Execute o comando abaixo para iniciar o *NDB Manager*.
+
+```bash
+$ docker run -it --net=cluster mysql-cluster ndb_mgm
+```
+
+A tela de console deve ser exibida.
+
+```bash
+[Entrypoint] MySQL Docker Image 8.0.22-1.1.18-cluster
+[Entrypoint] Starting ndb_mgm
+-- NDB Cluster -- Management Client --
+ndb_mgm>
+```
+
+Execute o comando *show* para verificar o status do cluster.
+
+```bash
+ndb_mgm> show
+```
+Veja o resultado do comando.
+
+```bash
+Connected to Management Server at: 10.100.0.2:1186
+Cluster Configuration
+---------------------
+[ndbd(NDB)]	2 node(s)
+id=2	@10.100.0.3  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0, *)
+id=3	@10.100.0.4  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0)
+
+[ndb_mgmd(MGM)]	1 node(s)
+id=1	@10.100.0.2  (mysql-8.0.22 ndb-8.0.22)
+
+[mysqld(API)]	2 node(s)
+id=4	@10.100.0.10  (mysql-8.0.22 ndb-8.0.22)
+id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
+
+ndb_mgm>
+```
+
+Para apresentar o conceito de replicação vamos criar o database northwind no node 1 e mostrar o resultado da replicação. Antes de executar, veja os Banco de Dados que temos nos nodes SQL.
+
+```bash
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| information_schema |
+| mysql              |
+| ndbinfo            |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.01 sec)
+```
+Agora vamos acessar o 1° node SQL (docker exec -it <node_name> mysql -uroot -p).
+
+```bash
+$ docker exec -it mysql1 mysql -uroot -p
+```
+
+Crie o Banco de Dados do nosso estudo de caso.
+
+```bash
+mysql> create database northwind;
+Query OK, 1 row affected (0.38 sec)
+```
+
+Acessando o 2° node SQL é possível confirmar que o comando foi replicado.
+
+```bash
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| information_schema |
+| mysql              |
+| ndbinfo            |
+| northwind          |
+| performance_schema |
+| sys                |
++--------------------+
+7 rows in set (0.01 sec)
+```
+
+2. **Failover automático** - O Mysql Cluster detecta automaticamente as falhas e faz o *failover* automático para os demais nós disponíveis do cluster sem interromper o serviço ao usuário.
+
+Para estes testes vamos interomper 1 nó de dado e 1 nó SQL.
+
+```bash
+$ docker stop mysql1 ndb2
+```
+
+Tente acessar o 1° node SQL.
+
+```bash
+$ docker exec -it mysql1 mysql -uroot -p
+```
+
+O resultado será:
+
+```bash
+Error response from daemon: Container 56887df6ca9b1a3da24043b004fa1be4500b6e09dd078a522a54f3daed08cb31 is not running
+```
+
+Vamos verificar o status do cluster novamente.
+
+```bash
+ndb_mgm> show
+```
+Veja o resultado do comando. Note que temos 2 nodes que não estão sendo executados no momento e que foram detectados automaticamente no console de gerenciamento do cluster.
+
+```bash
+Cluster Configuration
+---------------------
+[ndbd(NDB)]	2 node(s)
+id=2	@10.100.0.3  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0, *)
+id=3 (not connected, accepting connect from 10.100.0.4)
+
+[ndb_mgmd(MGM)]	1 node(s)
+id=1	@10.100.0.2  (mysql-8.0.22 ndb-8.0.22)
+
+[mysqld(API)]	2 node(s)
+id=4 (not connected, accepting connect from 10.100.0.10)
+id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
+
+ndb_mgm>
+```
+
+3. **Autocorreção** - Quando um node que possue os dados replicados fica indisponível é importante garantir que antes de reingressar no cluster esteja com os dados atualizados. O caso do MySQL Cluster faz este trabalho com transparência sem a necessidade de intervenção manual dos usuários.
+
+É importante lembrar que no momento temos 1 node de dados e 1 node SQL fora de operação. Para provar o conceito de autocorreção vamos criar as tabelas e inserir dados no banco de dados northwind usando o 2° node SQL do cluster.
+
+Acesse o 2° node SQL.
+
+```bash
+$ docker exec -it mysql2 mysql -uroot -p
+```
+
+Acesse o Banco de Dados northwind.
+
+```bash
+mysql> use northwind
+```
+
+Execute os comandos abaixo para criar as tabelas. 
+
+Importante: Para utilizar os recursos do MySQL Cluster todas as tabelas devem obrigatoriamente ter o **ENGINE=NDBCLUSTER**.
+
+```bash
+mysql> CREATE TABLE categories (
+    category_id int(11) NOT NULL PRIMARY KEY,
+    category_name varchar(15) NOT NULL,
+    description text,
+    picture blob
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE customer_demographics (
+    customer_type_id char NOT NULL PRIMARY KEY,
+    customer_desc text
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE customers (
+    customer_id char NOT NULL PRIMARY KEY,
+    company_name varchar(40) NOT NULL,
+    contact_name varchar(30),
+    contact_title varchar(30),
+    address varchar(60),
+    city varchar(15),
+    region varchar(15),
+    postal_code varchar(10),
+    country varchar(15),
+    phone varchar(24),
+    fax varchar(24)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE customer_customer_demo (
+    customer_id char NOT NULL,
+    customer_type_id char NOT NULL,
+    PRIMARY KEY (customer_id, customer_type_id),
+    FOREIGN KEY (customer_type_id) REFERENCES customer_demographics(customer_type_id),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE employees (
+    employee_id int(11) NOT NULL PRIMARY KEY,
+    last_name varchar(20) NOT NULL,
+    first_name varchar(10) NOT NULL,
+    title varchar(30),
+    title_of_courtesy varchar(25),
+    birth_date date,
+    hire_date date,
+    address varchar(60),
+    city varchar(15),
+    region varchar(15),
+    postal_code varchar(10),
+    country varchar(15),
+    home_phone varchar(24),
+    extension varchar(4),
+    photo blob,
+    notes text,
+    reports_to int(11),
+    photo_path varchar(255)	
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE suppliers (
+    supplier_id int(11) NOT NULL PRIMARY KEY,
+    company_name varchar(40) NOT NULL,
+    contact_name varchar(30),
+    contact_title varchar(30),
+    address varchar(60),
+    city varchar(15),
+    region varchar(15),
+    postal_code varchar(10),
+    country varchar(15),
+    phone varchar(24),
+    fax varchar(24),
+    homepage text
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE products (
+    product_id int(11) NOT NULL PRIMARY KEY,
+    product_name varchar(40) NOT NULL,
+    supplier_id int(11),
+    category_id int(11),
+    quantity_per_unit varchar(20),
+    unit_price double,
+    units_in_stock int(11),
+    units_on_order int(11),
+    reorder_level int(11),
+    discontinued integer NOT NULL,
+	FOREIGN KEY (category_id) REFERENCES categories(category_id),
+	FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE region (
+    region_id int(11) NOT NULL PRIMARY KEY,
+    region_description char NOT NULL
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE shippers (
+    shipper_id int(11) NOT NULL PRIMARY KEY,
+    company_name varchar(40) NOT NULL,
+    phone varchar(24)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE orders (
+    order_id int(11) NOT NULL PRIMARY KEY,
+    customer_id char,
+    employee_id int(11),
+    order_date date,
+    required_date date,
+    shipped_date date,
+    ship_via int(11),
+    freight double,
+    ship_name varchar(40),
+    ship_address varchar(60),
+    ship_city varchar(15),
+    ship_region varchar(15),
+    ship_postal_code varchar(10),
+    ship_country varchar(15),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)    
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE territories (
+    territory_id varchar(20) NOT NULL PRIMARY KEY,
+    territory_description char NOT NULL,
+    region_id int(11) NOT NULL,
+	FOREIGN KEY (region_id) REFERENCES region(region_id)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE employee_territories (
+    employee_id int(11) NOT NULL,
+    territory_id varchar(20) NOT NULL,
+    PRIMARY KEY (employee_id, territory_id),
+    FOREIGN KEY (territory_id) REFERENCES territories(territory_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE order_details (
+    order_id int(11) NOT NULL,
+    product_id int(11) NOT NULL,
+    unit_price double NOT NULL,
+    quantity int(11) NOT NULL,
+    discount double NOT NULL,
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+) ENGINE=NDBCLUSTER;
+
+CREATE TABLE us_states (
+    state_id int(11) NOT NULL PRIMARY KEY,
+    state_name varchar(100),
+    state_abbr varchar(2),
+    state_region varchar(50)
+) ENGINE=NDBCLUSTER;
+```
+
+Execute os comandos abaixo para popular as tabelas categories, suppliers e products:
+
+```bash
+mysql> INSERT INTO categories VALUES (1, 'Beverages', 'Soft drinks, coffees, teas, beers, and ales', '\x');
+INSERT INTO categories VALUES (2, 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings', '\x');
+INSERT INTO categories VALUES (3, 'Confections', 'Desserts, candies, and sweet breads', '\x');
+INSERT INTO categories VALUES (4, 'Dairy Products', 'Cheeses', '\x');
+INSERT INTO categories VALUES (5, 'Grains/Cereals', 'Breads, crackers, pasta, and cereal', '\x');
+INSERT INTO categories VALUES (6, 'Meat/Poultry', 'Prepared meats', '\x');
+INSERT INTO categories VALUES (7, 'Produce', 'Dried fruit and bean curd', '\x');
+INSERT INTO categories VALUES (8, 'Seafood', 'Seaweed and fish', '\x');
+
+INSERT INTO suppliers VALUES (1, 'Exotic Liquids', 'Charlotte Cooper', 'Purchasing Manager', '49 Gilbert St.', 'London', NULL, 'EC1 4SD', 'UK', '(171) 555-2222', NULL, NULL);
+INSERT INTO suppliers VALUES (2, 'New Orleans Cajun Delights', 'Shelley Burke', 'Order Administrator', 'P.O. Box 78934', 'New Orleans', 'LA', '70117', 'USA', '(100) 555-4822', NULL, '#CAJUN.HTM#');
+INSERT INTO suppliers VALUES (3, 'Grandma Kelly''s Homestead', 'Regina Murphy', 'Sales Representative', '707 Oxford Rd.', 'Ann Arbor', 'MI', '48104', 'USA', '(313) 555-5735', '(313) 555-3349', NULL);
+INSERT INTO suppliers VALUES (4, 'Tokyo Traders', 'Yoshi Nagase', 'Marketing Manager', '9-8 Sekimai Musashino-shi', 'Tokyo', NULL, '100', 'Japan', '(03) 3555-5011', NULL, NULL);
+INSERT INTO suppliers VALUES (5, 'Cooperativa de Quesos ''Las Cabras''', 'Antonio del Valle Saavedra', 'Export Administrator', 'Calle del Rosal 4', 'Oviedo', 'Asturias', '33007', 'Spain', '(98) 598 76 54', NULL, NULL);
+INSERT INTO suppliers VALUES (6, 'Mayumi''s', 'Mayumi Ohno', 'Marketing Representative', '92 Setsuko Chuo-ku', 'Osaka', NULL, '545', 'Japan', '(06) 431-7877', NULL, 'Mayumi''s (on the World Wide Web)#http://www.microsoft.com/accessdev/sampleapps/mayumi.htm#');
+INSERT INTO suppliers VALUES (7, 'Pavlova, Ltd.', 'Ian Devling', 'Marketing Manager', '74 Rose St. Moonie Ponds', 'Melbourne', 'Victoria', '3058', 'Australia', '(03) 444-2343', '(03) 444-6588', NULL);
+INSERT INTO suppliers VALUES (8, 'Specialty Biscuits, Ltd.', 'Peter Wilson', 'Sales Representative', '29 King''s Way', 'Manchester', NULL, 'M14 GSD', 'UK', '(161) 555-4448', NULL, NULL);
+INSERT INTO suppliers VALUES (9, 'PB Knäckebröd AB', 'Lars Peterson', 'Sales Agent', 'Kaloadagatan 13', 'Göteborg', NULL, 'S-345 67', 'Sweden', '031-987 65 43', '031-987 65 91', NULL);
+INSERT INTO suppliers VALUES (10, 'Refrescos Americanas LTDA', 'Carlos Diaz', 'Marketing Manager', 'Av. das Americanas 12.890', 'Sao Paulo', NULL, '5442', 'Brazil', '(11) 555 4640', NULL, NULL);
+INSERT INTO suppliers VALUES (11, 'Heli Süßwaren GmbH & Co. KG', 'Petra Winkler', 'Sales Manager', 'Tiergartenstraße 5', 'Berlin', NULL, '10785', 'Germany', '(010) 9984510', NULL, NULL);
+INSERT INTO suppliers VALUES (12, 'Plutzer Lebensmittelgroßmärkte AG', 'Martin Bein', 'International Marketing Mgr.', 'Bogenallee 51', 'Frankfurt', NULL, '60439', 'Germany', '(069) 992755', NULL, 'Plutzer (on the World Wide Web)#http://www.microsoft.com/accessdev/sampleapps/plutzer.htm#');
+INSERT INTO suppliers VALUES (13, 'Nord-Ost-Fisch Handelsgesellschaft mbH', 'Sven Petersen', 'Coordinator Foreign Markets', 'Frahmredder 112a', 'Cuxhaven', NULL, '27478', 'Germany', '(04721) 8713', '(04721) 8714', NULL);
+INSERT INTO suppliers VALUES (14, 'Formaggi Fortini s.r.l.', 'Elio Rossi', 'Sales Representative', 'Viale Dante, 75', 'Ravenna', NULL, '48100', 'Italy', '(0544) 60323', '(0544) 60603', '#FORMAGGI.HTM#');
+INSERT INTO suppliers VALUES (15, 'Norske Meierier', 'Beate Vileid', 'Marketing Manager', 'Hatlevegen 5', 'Sandvika', NULL, '1320', 'Norway', '(0)2-953010', NULL, NULL);
+INSERT INTO suppliers VALUES (16, 'Bigfoot Breweries', 'Cheryl Saylor', 'Regional Account Rep.', '3400 - 8th Avenue Suite 210', 'Bend', 'OR', '97101', 'USA', '(503) 555-9931', NULL, NULL);
+INSERT INTO suppliers VALUES (17, 'Svensk Sjöföda AB', 'Michael Björn', 'Sales Representative', 'Brovallavägen 231', 'Stockholm', NULL, 'S-123 45', 'Sweden', '08-123 45 67', NULL, NULL);
+INSERT INTO suppliers VALUES (18, 'Aux joyeux ecclésiastiques', 'Guylène Nodier', 'Sales Manager', '203, Rue des Francs-Bourgeois', 'Paris', NULL, '75004', 'France', '(1) 03.83.00.68', '(1) 03.83.00.62', NULL);
+INSERT INTO suppliers VALUES (19, 'New England Seafood Cannery', 'Robb Merchant', 'Wholesale Account Agent', 'Order Processing Dept. 2100 Paul Revere Blvd.', 'Boston', 'MA', '02134', 'USA', '(617) 555-3267', '(617) 555-3389', NULL);
+INSERT INTO suppliers VALUES (20, 'Leka Trading', 'Chandra Leka', 'Owner', '471 Serangoon Loop, Suite #402', 'Singapore', NULL, '0512', 'Singapore', '555-8787', NULL, NULL);
+INSERT INTO suppliers VALUES (21, 'Lyngbysild', 'Niels Petersen', 'Sales Manager', 'Lyngbysild Fiskebakken 10', 'Lyngby', NULL, '2800', 'Denmark', '43844108', '43844115', NULL);
+INSERT INTO suppliers VALUES (22, 'Zaanse Snoepfabriek', 'Dirk Luchte', 'Accounting Manager', 'Verkoop Rijnweg 22', 'Zaandam', NULL, '9999 ZZ', 'Netherlands', '(12345) 1212', '(12345) 1210', NULL);
+INSERT INTO suppliers VALUES (23, 'Karkki Oy', 'Anne Heikkonen', 'Product Manager', 'Valtakatu 12', 'Lappeenranta', NULL, '53120', 'Finland', '(953) 10956', NULL, NULL);
+INSERT INTO suppliers VALUES (24, 'G''day, Mate', 'Wendy Mackenzie', 'Sales Representative', '170 Prince Edward Parade Hunter''s Hill', 'Sydney', 'NSW', '2042', 'Australia', '(02) 555-5914', '(02) 555-4873', 'G''day Mate (on the World Wide Web)#http://www.microsoft.com/accessdev/sampleapps/gdaymate.htm#');
+INSERT INTO suppliers VALUES (25, 'Ma Maison', 'Jean-Guy Lauzon', 'Marketing Manager', '2960 Rue St. Laurent', 'Montréal', 'Québec', 'H1J 1C3', 'Canada', '(514) 555-9022', NULL, NULL);
+INSERT INTO suppliers VALUES (26, 'Pasta Buttini s.r.l.', 'Giovanni Giudici', 'Order Administrator', 'Via dei Gelsomini, 153', 'Salerno', NULL, '84100', 'Italy', '(089) 6547665', '(089) 6547667', NULL);
+INSERT INTO suppliers VALUES (27, 'Escargots Nouveaux', 'Marie Delamare', 'Sales Manager', '22, rue H. Voiron', 'Montceau', NULL, '71300', 'France', '85.57.00.07', NULL, NULL);
+INSERT INTO suppliers VALUES (28, 'Gai pâturage', 'Eliane Noz', 'Sales Representative', 'Bat. B 3, rue des Alpes', 'Annecy', NULL, '74000', 'France', '38.76.98.06', '38.76.98.58', NULL);
+INSERT INTO suppliers VALUES (29, 'Forêts d''érables', 'Chantal Goulet', 'Accounting Manager', '148 rue Chasseur', 'Ste-Hyacinthe', 'Québec', 'J2S 7S8', 'Canada', '(514) 555-2955', '(514) 555-2921', NULL);
+
+INSERT INTO products VALUES (1, 'Chai', 8, 1, '10 boxes x 30 bags', 18, 39, 0, 10, 1);
+INSERT INTO products VALUES (2, 'Chang', 1, 1, '24 - 12 oz bottles', 19, 17, 40, 25, 1);
+INSERT INTO products VALUES (3, 'Aniseed Syrup', 1, 2, '12 - 550 ml bottles', 10, 13, 70, 25, 0);
+INSERT INTO products VALUES (4, 'Chef Anton''s Cajun Seasoning', 2, 2, '48 - 6 oz jars', 22, 53, 0, 0, 0);
+INSERT INTO products VALUES (5, 'Chef Anton''s Gumbo Mix', 2, 2, '36 boxes', 21.3500004, 0, 0, 0, 1);
+INSERT INTO products VALUES (6, 'Grandma''s Boysenberry Spread', 3, 2, '12 - 8 oz jars', 25, 120, 0, 25, 0);
+INSERT INTO products VALUES (7, 'Uncle Bob''s Organic Dried Pears', 3, 7, '12 - 1 lb pkgs.', 30, 15, 0, 10, 0);
+INSERT INTO products VALUES (8, 'Northwoods Cranberry Sauce', 3, 2, '12 - 12 oz jars', 40, 6, 0, 0, 0);
+INSERT INTO products VALUES (9, 'Mishi Kobe Niku', 4, 6, '18 - 500 g pkgs.', 97, 29, 0, 0, 1);
+INSERT INTO products VALUES (10, 'Ikura', 4, 8, '12 - 200 ml jars', 31, 31, 0, 0, 0);
+INSERT INTO products VALUES (11, 'Queso Cabrales', 5, 4, '1 kg pkg.', 21, 22, 30, 30, 0);
+INSERT INTO products VALUES (12, 'Queso Manchego La Pastora', 5, 4, '10 - 500 g pkgs.', 38, 86, 0, 0, 0);
+INSERT INTO products VALUES (13, 'Konbu', 6, 8, '2 kg box', 6, 24, 0, 5, 0);
+INSERT INTO products VALUES (14, 'Tofu', 6, 7, '40 - 100 g pkgs.', 23.25, 35, 0, 0, 0);
+INSERT INTO products VALUES (15, 'Genen Shouyu', 6, 2, '24 - 250 ml bottles', 13, 39, 0, 5, 0);
+INSERT INTO products VALUES (16, 'Pavlova', 7, 3, '32 - 500 g boxes', 17.4500008, 29, 0, 10, 0);
+INSERT INTO products VALUES (17, 'Alice Mutton', 7, 6, '20 - 1 kg tins', 39, 0, 0, 0, 1);
+INSERT INTO products VALUES (18, 'Carnarvon Tigers', 7, 8, '16 kg pkg.', 62.5, 42, 0, 0, 0);
+INSERT INTO products VALUES (19, 'Teatime Chocolate Biscuits', 8, 3, '10 boxes x 12 pieces', 9.19999981, 25, 0, 5, 0);
+INSERT INTO products VALUES (20, 'Sir Rodney''s Marmalade', 8, 3, '30 gift boxes', 81, 40, 0, 0, 0);
+INSERT INTO products VALUES (21, 'Sir Rodney''s Scones', 8, 3, '24 pkgs. x 4 pieces', 10, 3, 40, 5, 0);
+INSERT INTO products VALUES (22, 'Gustaf''s Knäckebröd', 9, 5, '24 - 500 g pkgs.', 21, 104, 0, 25, 0);
+INSERT INTO products VALUES (23, 'Tunnbröd', 9, 5, '12 - 250 g pkgs.', 9, 61, 0, 25, 0);
+INSERT INTO products VALUES (24, 'Guaraná Fantástica', 10, 1, '12 - 355 ml cans', 4.5, 20, 0, 0, 1);
+INSERT INTO products VALUES (25, 'NuNuCa Nuß-Nougat-Creme', 11, 3, '20 - 450 g glasses', 14, 76, 0, 30, 0);
+INSERT INTO products VALUES (26, 'Gumbär Gummibärchen', 11, 3, '100 - 250 g bags', 31.2299995, 15, 0, 0, 0);
+INSERT INTO products VALUES (27, 'Schoggi Schokolade', 11, 3, '100 - 100 g pieces', 43.9000015, 49, 0, 30, 0);
+INSERT INTO products VALUES (28, 'Rössle Sauerkraut', 12, 7, '25 - 825 g cans', 45.5999985, 26, 0, 0, 1);
+INSERT INTO products VALUES (29, 'Thüringer Rostbratwurst', 12, 6, '50 bags x 30 sausgs.', 123.790001, 0, 0, 0, 1);
+INSERT INTO products VALUES (30, 'Nord-Ost Matjeshering', 13, 8, '10 - 200 g glasses', 25.8899994, 10, 0, 15, 0);
+INSERT INTO products VALUES (31, 'Gorgonzola Telino', 14, 4, '12 - 100 g pkgs', 12.5, 0, 70, 20, 0);
+INSERT INTO products VALUES (32, 'Mascarpone Fabioli', 14, 4, '24 - 200 g pkgs.', 32, 9, 40, 25, 0);
+INSERT INTO products VALUES (33, 'Geitost', 15, 4, '500 g', 2.5, 112, 0, 20, 0);
+INSERT INTO products VALUES (34, 'Sasquatch Ale', 16, 1, '24 - 12 oz bottles', 14, 111, 0, 15, 0);
+INSERT INTO products VALUES (35, 'Steeleye Stout', 16, 1, '24 - 12 oz bottles', 18, 20, 0, 15, 0);
+INSERT INTO products VALUES (36, 'Inlagd Sill', 17, 8, '24 - 250 g  jars', 19, 112, 0, 20, 0);
+INSERT INTO products VALUES (37, 'Gravad lax', 17, 8, '12 - 500 g pkgs.', 26, 11, 50, 25, 0);
+INSERT INTO products VALUES (38, 'Côte de Blaye', 18, 1, '12 - 75 cl bottles', 263.5, 17, 0, 15, 0);
+INSERT INTO products VALUES (39, 'Chartreuse verte', 18, 1, '750 cc per bottle', 18, 69, 0, 5, 0);
+INSERT INTO products VALUES (40, 'Boston Crab Meat', 19, 8, '24 - 4 oz tins', 18.3999996, 123, 0, 30, 0);
+INSERT INTO products VALUES (41, 'Jack''s New England Clam Chowder', 19, 8, '12 - 12 oz cans', 9.64999962, 85, 0, 10, 0);
+INSERT INTO products VALUES (42, 'Singaporean Hokkien Fried Mee', 20, 5, '32 - 1 kg pkgs.', 14, 26, 0, 0, 1);
+INSERT INTO products VALUES (43, 'Ipoh Coffee', 20, 1, '16 - 500 g tins', 46, 17, 10, 25, 0);
+INSERT INTO products VALUES (44, 'Gula Malacca', 20, 2, '20 - 2 kg bags', 19.4500008, 27, 0, 15, 0);
+INSERT INTO products VALUES (45, 'Rogede sild', 21, 8, '1k pkg.', 9.5, 5, 70, 15, 0);
+INSERT INTO products VALUES (46, 'Spegesild', 21, 8, '4 - 450 g glasses', 12, 95, 0, 0, 0);
+INSERT INTO products VALUES (47, 'Zaanse koeken', 22, 3, '10 - 4 oz boxes', 9.5, 36, 0, 0, 0);
+INSERT INTO products VALUES (48, 'Chocolade', 22, 3, '10 pkgs.', 12.75, 15, 70, 25, 0);
+INSERT INTO products VALUES (49, 'Maxilaku', 23, 3, '24 - 50 g pkgs.', 20, 10, 60, 15, 0);
+INSERT INTO products VALUES (50, 'Valkoinen suklaa', 23, 3, '12 - 100 g bars', 16.25, 65, 0, 30, 0);
+INSERT INTO products VALUES (51, 'Manjimup Dried Apples', 24, 7, '50 - 300 g pkgs.', 53, 20, 0, 10, 0);
+INSERT INTO products VALUES (52, 'Filo Mix', 24, 5, '16 - 2 kg boxes', 7, 38, 0, 25, 0);
+INSERT INTO products VALUES (53, 'Perth Pasties', 24, 6, '48 pieces', 32.7999992, 0, 0, 0, 1);
+INSERT INTO products VALUES (54, 'Tourtière', 25, 6, '16 pies', 7.44999981, 21, 0, 10, 0);
+INSERT INTO products VALUES (55, 'Pâté chinois', 25, 6, '24 boxes x 2 pies', 24, 115, 0, 20, 0);
+INSERT INTO products VALUES (56, 'Gnocchi di nonna Alice', 26, 5, '24 - 250 g pkgs.', 38, 21, 10, 30, 0);
+INSERT INTO products VALUES (57, 'Ravioli Angelo', 26, 5, '24 - 250 g pkgs.', 19.5, 36, 0, 20, 0);
+INSERT INTO products VALUES (58, 'Escargots de Bourgogne', 27, 8, '24 pieces', 13.25, 62, 0, 20, 0);
+INSERT INTO products VALUES (59, 'Raclette Courdavault', 28, 4, '5 kg pkg.', 55, 79, 0, 0, 0);
+INSERT INTO products VALUES (60, 'Camembert Pierrot', 28, 4, '15 - 300 g rounds', 34, 19, 0, 0, 0);
+INSERT INTO products VALUES (61, 'Sirop d''érable', 29, 2, '24 - 500 ml bottles', 28.5, 113, 0, 25, 0);
+INSERT INTO products VALUES (62, 'Tarte au sucre', 29, 3, '48 pies', 49.2999992, 17, 0, 0, 0);
+INSERT INTO products VALUES (63, 'Vegie-spread', 7, 2, '15 - 625 g jars', 43.9000015, 24, 0, 5, 0);
+INSERT INTO products VALUES (64, 'Wimmers gute Semmelknödel', 12, 5, '20 bags x 4 pieces', 33.25, 22, 80, 30, 0);
+INSERT INTO products VALUES (65, 'Louisiana Fiery Hot Pepper Sauce', 2, 2, '32 - 8 oz bottles', 21.0499992, 76, 0, 0, 0);
+INSERT INTO products VALUES (66, 'Louisiana Hot Spiced Okra', 2, 2, '24 - 8 oz jars', 17, 4, 100, 20, 0);
+INSERT INTO products VALUES (67, 'Laughing Lumberjack Lager', 16, 1, '24 - 12 oz bottles', 14, 52, 0, 10, 0);
+INSERT INTO products VALUES (68, 'Scottish Longbreads', 8, 3, '10 boxes x 8 pieces', 12.5, 6, 10, 15, 0);
+INSERT INTO products VALUES (69, 'Gudbrandsdalsost', 15, 4, '10 kg pkg.', 36, 26, 0, 15, 0);
+INSERT INTO products VALUES (70, 'Outback Lager', 7, 1, '24 - 355 ml bottles', 15, 15, 10, 30, 0);
+INSERT INTO products VALUES (71, 'Flotemysost', 15, 4, '10 - 500 g pkgs.', 21.5, 26, 0, 0, 0);
+INSERT INTO products VALUES (72, 'Mozzarella di Giovanni', 14, 4, '24 - 200 g pkgs.', 34.7999992, 14, 0, 0, 0);
+INSERT INTO products VALUES (73, 'Röd Kaviar', 17, 8, '24 - 150 g jars', 15, 101, 0, 5, 0);
+INSERT INTO products VALUES (74, 'Longlife Tofu', 4, 7, '5 kg pkg.', 10, 4, 20, 5, 0);
+INSERT INTO products VALUES (75, 'Rhönbräu Klosterbier', 12, 1, '24 - 0.5 l bottles', 7.75, 125, 0, 25, 0);
+INSERT INTO products VALUES (76, 'Lakkalikööri', 23, 1, '500 ml', 18, 57, 0, 20, 0);
+INSERT INTO products VALUES (77, 'Original Frankfurter grüne Soße', 12, 2, '12 boxes', 13, 32, 0, 15, 0);
+```
+
+Agora vamos reiniciar o node de dados e SQL que estão fora de operação.
+
+```bash
+$ docker start mysql1 ndb2
+```
+
+Se a sua console já esteja aberta, aguarde a exibição da mensagem abaixo.
+
+```bash
+ndb_mgm> Node 3: Started (version 8.0.22)
+```
+
+Caso contrário, verifique o status executando comando *show* na console de gerenciamento do cluster.
+
+```bash
+ndb_mgm> show
+Cluster Configuration
+---------------------
+[ndbd(NDB)]	2 node(s)
+id=2	@10.100.0.3  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0, *)
+id=3	@10.100.0.4  (mysql-8.0.22 ndb-8.0.22, Nodegroup: 0)
+
+[ndb_mgmd(MGM)]	1 node(s)
+id=1	@10.100.0.2  (mysql-8.0.22 ndb-8.0.22)
+
+[mysqld(API)]	2 node(s)
+id=4	@10.100.0.10  (mysql-8.0.22 ndb-8.0.22)
+id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
+```
+
+Chegou o momento de acessar o 1° node SQL e confirmar a **autocorreção** do node com os dados replicados.
+
+```bash
+$ docker exec -it mysql1 mysql -uroot -p
+```
+
+Veja o resultado das tabelas criadas e os dados inseridos com os comandos listados abaixo.
+
+```bash
+$ docker exec -it mysql1 mysql -uroot -p
+```
+
+```bash
+mysql> use northwind;
+```
+
+Liste as tabelas replicadas para o 1° node SQL.
+
+```bash
+mysql> show tables;
+```
+
+O retorno deve ser:
+
+```bash
++------------------------+
+| Tables_in_northwind    |
++------------------------+
+| categories             |
+| customer_customer_demo |
+| customer_demographics  |
+| customers              |
+| employee_territories   |
+| employees              |
+| order_details          |
+| orders                 |
+| products               |
+| region                 |
+| shippers               |
+| suppliers              |
+| territories            |
+| us_states              |
++------------------------+
+14 rows in set (0.00 sec)
+
+mysql>
+```
+
+Agora confirme se os dados inseridos foram replicados.
+
+```bash
+mysql> select count(*) from categories;
+```
+
+Retorno:
+
+```bash
++----------+
+| count(*) |
++----------+
+|        8 |
++----------+
+1 row in set (0.00 sec)
+```
+
+```bash
+mysql> select count(*) from suppliers;
+```
+
+Retorno:
+
+```bash
++----------+
+| count(*) |
++----------+
+|       29 |
++----------+
+1 row in set (0.00 sec)
+```
+
+```bash
+mysql> select count(*) from products;
+```
+
+Retorno:
+
+```bash
++----------+
+| count(*) |
++----------+
+|       77 |
++----------+
+1 row in set (0.00 sec)
+```
 
 <a id="referencias"></a>
 # Referências Bibliográficas
