@@ -179,7 +179,7 @@ A confiabiliade de um sistema gerenciador de Banco de Dados tem um relação dir
 <a id="resiliencia-mysqlcluster"></a>
 ### MySQL Cluster
 
-No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
+No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [MySQL 2020c](#MySQL-2020c).
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
@@ -280,7 +280,7 @@ Nesta seção será mostrado o processo de instalação e configuração da vers
 <br>Figura 5: MySQL Docker logo. Fonte: (Medium 2020a)</br>
 </p>
 
-Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes SQL conforme ilustrado na imagem abaixo.
+Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes SQL conforme ilustrado na figura abaixo.
 
 <p align="center">
 <img src="./images/NDB-cluster-diagram.jpeg" width="505">
@@ -369,6 +369,9 @@ $ docker run -d --net=cluster --name=management1 --ip=10.100.0.2 mysql-cluster n
 
 ```bash
 $ docker run -d --net=cluster --name=ndb1 --ip=10.100.0.3 mysql-cluster ndbd
+```
+
+```bash
 $ docker run -d --net=cluster --name=ndb2 --ip=10.100.0.4 mysql-cluster ndbd
 ```
 
@@ -376,6 +379,9 @@ $ docker run -d --net=cluster --name=ndb2 --ip=10.100.0.4 mysql-cluster ndbd
 
 ```bash
 $ docker run -d --net=cluster --name=mysql1 --ip=10.100.0.10 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
+```
+
+```bash
 $ docker run -d --net=cluster --name=mysql2 --ip=10.100.0.11 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
 ```
 
@@ -473,7 +479,120 @@ mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
 ```bash
 mysql> flush privileges; 
 ```
-Repita os passos 13 a 17 para o 2° node mysql do cluster.
+**Repita os passos 13 a 17 para o 2° node mysql do cluster.**
+
+<a id="instalacao-cockroachdb"></a>
+### CockroachDB
+
+Nesta etapa iremos instalar e configurar a versão 20.2.2 do **CockroachDB** no **Docker**. Cada node será executado em *hosts* separados usando a configuração de rede do Docker.
+
+<p align="center">
+<img src="./images/cockroachdb_logo.png" width="568">
+<br>Figura 7: Cockroach logo. Fonte: (Cockroach 2020a)</br>
+</p>
+
+Ao final do processo teremos 3 nodes e cada node terá uma instância de Banco de Dados conforme podemos ver na figura abaixo.
+
+<p align="center">
+<img src="./images/ui_cluster_overview_3_nodes.png" width="505">
+<br>Figura 8: Start a Cluster in Docker. Fonte: (Cockroach-2020c)</br>
+</p>
+
+Aplique a sequência de comandos abaixo para ter todos os nodes em operacão [Cockroach 2020c](#Cockroach-2020c).
+
+1. Baixe a imagem do cockroachdb no Docker:
+
+```bash
+$ sudo docker pull cockroachdb/cockroach:v20.2.2 
+```
+
+2. Crie a rede no Docker:
+
+```bash
+$ docker network create -d bridge roachnet 
+```
+
+3. Inicie o 1° node:
+
+```bash
+$ docker run -d \
+--name=roach1 \
+--hostname=roach1 \
+--net=roachnet \
+-p 26257:26257 -p 8080:8080  \
+-v "${PWD}/cockroach-data/roach1:/cockroach/cockroach-data"  \
+cockroachdb/cockroach:v20.2.2 start \
+--insecure \
+--join=roach1,roach2,roach3
+```
+
+* Antes de iniciar os demais nodes, vamos entender cada parâmetro do comando acima.
+  * **docker run**: Comando Docker que inicia um novo container;
+  * **-d**: Esta *flag* permite rodar o comando em *background*;
+  * **--name**: O nome do container;
+  * **--hostname**: Este é um identificador único utilizado para juntar outros nodes no cluster;
+  * **--net**: O nome do identificador de rede criado no passo 1;
+  * **-p 26257:26257 -p 8080:8080**: Porta de comunicação com o node e de requisição HTTP;
+  * **-v "${PWD}/cockroach-data/roach1:/cockroach/cockroach-data"**: Caminho de armazenamento do log do node;
+  * **cockroachdb/cockroach:v20.2.2 start --insecure**: Comando que inicia o node em mode inseguro; 
+  * **--join**: Lista de *hostnames* que compoem o cluster.  
+
+4. Inicie o 2° node:
+
+```bash
+$ docker run -d \
+--name=roach2 \
+--hostname=roach2 \
+--net=roachnet \
+-p 26257:26257 -p 8080:8080  \
+-v "${PWD}/cockroach-data/roach2:/cockroach/cockroach-data"  \
+cockroachdb/cockroach:v20.2.2 start \
+--insecure \
+--join=roach1,roach2,roach3
+```
+5. Inicie o 3° node:
+
+```bash
+$ docker run -d \
+--name=roach3 \
+--hostname=roach3 \
+--net=roachnet \
+-p 26257:26257 -p 8080:8080  \
+-v "${PWD}/cockroach-data/roach3:/cockroach/cockroach-data"  \
+cockroachdb/cockroach:v20.2.2 start \
+--insecure \
+--join=roach1,roach2,roach3
+```
+
+6. Acesse o 1° node do cockroach (docker exec -it <node_name> ./cockroach init --insecure):
+
+```bash
+$ docker exec -it roach1 ./cockroach init --insecure
+```
+Execute o comando abaixo para verificar detalhes do node iniciado.
+
+```bash
+$ grep 'node starting' cockroach-data/roach1/logs/cockroach.log -A 11
+```
+
+O resultado deve ser parecido com o log abaixo.
+
+```bash
+CockroachDB node starting at 2021-01-02 21:36:24.902390034 +0000 UTC (took 11.9s)
+build:               CCL v20.2.2 @ 2020/11/25 14:45:44 (go1.13.14)
+webui:               ‹http://roach1:8080›
+sql:                 ‹postgresql://root@roach1:26257?sslmode=disable›
+RPC client flags:    ‹/cockroach/cockroach <client cmd> --host=roach1:26257 --insecure›
+logs:                ‹/cockroach/cockroach-data/logs›
+temp dir:            ‹/cockroach/cockroach-data/cockroach-temp236940084›
+external I/O path:   ‹/cockroach/cockroach-data/extern›
+store[0]:            ‹path=/cockroach/cockroach-data›
+storage engine:      pebble
+status:              restarted pre-existing node
+clusterID:           ‹fc1b7739-d5bd-4e2b-a2b6-6d93ae12bc9a›
+```
+
+**Caso seja necessário, repita o passo 6 para acessar o 2° e 3° node do cockroach.** 
 
 <a id="referencias"></a>
 # Referências Bibliográficas
@@ -494,7 +613,7 @@ Repita os passos 13 a 17 para o 2° node mysql do cluster.
 - Cockroach Labs. [Architecture Overview, 2020b](https://www.cockroachlabs.com/docs/stable/architecture/overview.html). Acesso em 17 out 2020 às 15h30m.
 
 <a id="Cockroach-2020c"></a>
-- Cockroach Labs. [Architecture Overview, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h35m.
+- Cockroach Labs. [Start a Cluster in Docker, 2020c](https://www.cockroachlabs.com/docs/v20.2/start-a-local-cluster-in-docker-linux). Acesso em 04 dez 2020 às 19h10m.
 
 <a id="YugabyteDB-2020a"></a>
 - YugabyteDB. [YugabyteDB, 2020a](https://docs.yugabyte.com/latest/sample-data/northwind/). Acesso em 29 dez 2020 às 10h15m.
