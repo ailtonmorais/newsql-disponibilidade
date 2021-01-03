@@ -74,9 +74,9 @@ No total o Banco de Dados Northwind contém 14 tabelas. O diagrama com o relacio
 <a id="geral"></a>
 ## Visão Geral
 
-Os Bancos de Dados relacionais surguiram para necessidade de armazenamento de dados, mas na época não tinhamos as tecnologias Web e os diversos tipos de dispositivos que geram enorme quantidade de dados atualmente.
+Os Bancos de Dados relacionais surguiram para necessidade de armazenamento de dados, mas na época não existia as tecnologias Web e os diversos tipos de dispositivos que geram uma enorme quantidade de dados se compararmos com a nossa realidade atual.
 
-Com a evolução tecnológica e o astronômico crescimento dos dispositivos móveis conectados a internet abriu caminho para a era da Internet das Coisas e já estamos vivendo mudanças significativas na sociedade. Veja alguams declarações que demonstram tal potencial:
+Com a evolução tecnológica e o astronômico crescimento dos dispositivos móveis conectados a internet abriu caminho para a era da Internet das Coisas e já estamos vivendo mudanças significativas na sociedade. Veja algumas declarações que demonstram tal potencial:
 
 * A  Internet das Coisas será uma revolução muito maior que a internet e os celulares juntos! [(Krco, Srdjan, et al, 2013)](#Krco-2013);
   
@@ -94,7 +94,7 @@ A partir destes desafios surgiram os novos sistemas de Banco de Dados nomeados c
 
 Para quebrar alguns paradgimas foi criado os sistemas de Banco de Dados **NewSQL** que combinam funcionalidades do modelo relacional e NoSQL. Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) os sistemas **NewSQL** são soluções modernas que buscam prover o mesmo desempenho escalável dos Bancos de Dados **NoSQL** para cargas de trabalho **OLTP** com tı́pico suporte completo a todas as propriedades **ACID**, como encontrado nos Banco de Dados Relacionais.
 
-Os sistemas de Banco de Dados NewSQL são adequados para aplicações que utilizavam o **SGBD** tradicional, mas que surgiu a necessidade de escalabilidade adicional e aprimoramento de desempenho (YUAN, et al, 2015)](#Yuan-2015).
+Os sistemas de Banco de Dados NewSQL são adequados para aplicações que utilizavam o **SGBD** tradicional, mas que surgiu a necessidade de escalabilidade adicional e aprimoramento de desempenho [(YUAN, et al, 2015)](#Yuan-2015).
 
 Os sistemas de Banco de Dados NewSQL tem como característica a execução de transações de leitura e gravação que:
 
@@ -142,7 +142,7 @@ A alta disponibilidade não está relacionada somente ao tempo que um sistema es
 <a id="disponibilidade-mysqlcluster"></a>
 ### MySQL Cluster
 
-Para garantir a alta disponibilidade o MySQL Cluster se apoia em (MySQL 2020b):
+Para garantir a alta disponibilidade o MySQL Cluster se apoia em [(MySQL 2020b)](#MySQL-2020b):
 
 * **Replicação síncrona**: Os dados em cada nó de dados são replicados de forma síncrona para outro nó de dados;
 
@@ -157,7 +157,7 @@ Para garantir a alta disponibilidade o MySQL Cluster se apoia em (MySQL 2020b):
 <a id="disponibilidade-cockroachdb"></a>
 ### CockroachDB
 
-Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade (Cockroach Labs 2020b):
+Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade [(Cockroach Labs 2020b)](#Cockroach-2020b):
 
 * **Consistência**: Usa a "consistência" tanto no sentido da semântica ACID (Atomicity, Consistency, Isolation, Durability) quanto no teorema CAP (Consistency, Availability, Partition Tolerance), embora menos formalmente do que qualquer definição. O objetivo é garantir os dados livres de anomalias;
 
@@ -179,7 +179,7 @@ A confiabiliade de um sistema gerenciador de Banco de Dados tem um relação dir
 <a id="resiliencia-mysqlcluster"></a>
 ### MySQL Cluster
 
-No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [MySQL 2020c](#MySQL-2020c).
+No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
@@ -495,10 +495,10 @@ Ao final do processo teremos 3 nodes e cada node terá uma instância de Banco d
 
 <p align="center">
 <img src="./images/ui_cluster_overview_3_nodes.png" width="505">
-<br>Figura 8: Start a Cluster in Docker. Fonte: (Cockroach-2020c)</br>
+<br>Figura 8: Start a Cluster in Docker. Fonte: (Cockroach 2020c)</br>
 </p>
 
-Aplique a sequência de comandos abaixo para ter todos os nodes em operacão [Cockroach 2020c](#Cockroach-2020c).
+Aplique a sequência de comandos abaixo para ter todos os nodes em operacão [(Cockroach 2020c)](#Cockroach-2020c).
 
 1. Baixe a imagem do cockroachdb no Docker:
 
