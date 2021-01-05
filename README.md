@@ -6,7 +6,7 @@
 </p>
 
 # NewSQL - Disponibilidade
-<sub>Autores: Adriano Tomicha & Ailton Morais</sub>
+<sub>Autor: Ailton Morais</sub>
 
 <a id="indice"></a>
 # Índice
@@ -15,9 +15,10 @@
 	* [CockroachDB](#sobre-cockroachdb)
     * [Estudo de Caso](#caso)	
 * [Visão Geral](#geral)
+    * [Benchmark - MySQL vs CockroachDB](#benchmark)
 	* [Alta Disponibilidade](#disponibilidade)
     	* [MySQL Cluster](#disponibilidade-mysqlcluster)
-    	* [CockroachDB](#disponibilidade-cockroachdb)
+    	* [CockroachDB](#disponibilidade-cockroachdb)        
 * [Resiliência a Falhas](#resiliencia)	
     * [MySQL Cluster](#resiliencia-mysqlcluster)
     * [CockroachDB](#resiliencia-cockroachdb)
@@ -28,8 +29,7 @@
 * [Disponibilidade na Prática](#pratica)
 	* [MySQL Cluster](#pratica-mysqlcluster)
 	* [CockroachDB](#pratica-cockroachdb)
-* [Conclusão](#conclusao)
-	* [Resumo](#resumo)
+* [Conclusão](#conclusao)	
 * [Glossário](#glossario)
 * [Referências Bibliográficas](#referencias)
 
@@ -41,14 +41,14 @@ A proposta do tutorial é apresentar o passo a passo desde a instalação, confi
 <a id="sobre-mysqlcluster"></a>
 ### MySQL Cluster
 
-MySQL Cluster é o banco de dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
+MySQL Cluster é um Banco de Dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
 
-O Cluster MySQL tem replicação entre clusters em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
+O Cluster MySQL tem replicação entre clusters em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados o que torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
 
 <a id="sobre-cockroachdb"></a>
 ### CockroachDB
 
-CockroachDB é um banco de dados SQL distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de datacenter com interrupção de latência mínima e sem intervenção manual, suporta transações ACID fortemente consistentes e fornece uma API SQL familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
+CockroachDB é um Banco de Dados SQL distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de Datacenter com interrupção de latência mínima e sem intervenção manual, suporta transações ACID fortemente consistentes e fornece uma API SQL familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
 
 <a id="caso"></a>
 ### Estudo de Caso
@@ -82,7 +82,7 @@ Os Bancos de Dados relacionais surguiram para necessidade de armazenamento de da
 Com a evolução tecnológica e o astronômico crescimento dos dispositivos móveis conectados a internet abriu caminho para a era da Internet das Coisas e já estamos vivendo mudanças significativas na sociedade. Veja algumas declarações que demonstram tal potencial:
 
 * A  Internet das Coisas será uma revolução muito maior que a internet e os celulares juntos! [(Krco, Srdjan, et al, 2013)](#Krco-2013);
-  
+
 * A Internet das Coisas representa uma nova inteligência para os negócios, É uma mudança de paradigma do consumo, uma revolução do comportamento humano, um caminho para um novo mundo onde tudo e todos estarão conectados e sem fronteiras. Um caminho para um mundo que ainda não imaginamos [(Dias, 2016)](#Dias-2016).
 
 A partir destes desafios surgiram os novos sistemas de Banco de Dados nomeados como **NoSQL** (Not Only SQL). Estas soluções fornecem alta disponbilidade, escalabilidade e uma arquitetura distribuída com crescimento horizontal. Mesmo sendo capaz de manipular grandes quantidades de dados, os Banco de Dados NoSQL geralmente não possuem suporte para as propriedades ACID:
@@ -136,6 +136,24 @@ Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) as três categorias que melhor repre
 3. Ofertas de banco de dados como serviço de provedores de computação em nuvem que também são baseadas em novas arquiteturas.
 
 Certamente podemos considerar que os sistemas de Banco de Dados NewSQL conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [KAUR, 2017](#Kaur-2017) o NewSQL deve ser considerado como uma alternativa ao NoSQL ou banco de dados relacional clássico para novos aplicativos OLTP.
+
+<a id="benchmark"></a>
+## Benchmark - MySQL vs CockroachDB
+
+Benchmarks provêm um método de comparação da performance de vários subsistemas dentre as diferentes arquiteturas de chips e sistemas. Benchmarking é útil para o entendimento de como o gerenciador de banco de dados responde sob a variação de condições. Pode-se criar cenários que testam o tratamento de deadlock, performance dos utilitários, diferentes métodos de carregar dados, características da taxa de transição quando mais usuários são adicionados e ainda o efeito na aplicação usando uma nova versão do produto [(Wikipédia 2020a)](#Wikipedia-2020a).
+
+Para este estudo de caso vamos utilizar um teste pratico de simultaneidade de operações publicado no github [(Caleblloyd 2020a)](#caleblloyd-2020a). Caso tenha o MySQL e CockroachDB é possível reproduzir os mesmmos testes baixando os scripts disponibilizados no repositório. Acompanhe os resultados obtidos:
+
+* 10 conexões simultâneas. O resultado é o valor em **segundos**.
+
+|               | MySQL | CockroachDB |
+|-------------- |---------------------|
+| 10x Insert    | 0.11  | 0.57        |
+| 100x Insert   | 1.15  | 5.54        |
+| 10x Select    | 0.05  | 0.07        |
+| 100x Select   | 2.30  | 4.06        |
+| 10x Update    | 0.10  | 0.540       |
+| 100x Update   | 1.14  | 5.55        |
 
 <a id="disponibilidade"></a>
 ## Alta Disponibilidade
@@ -1246,7 +1264,7 @@ root@:26257/defaultdb> show databases;
 Time: 4ms total (execution 3ms / network 1ms)
 ```
 
-2. **Failover automático** - O CockroachDB também consegue detectar automaticamente a indisponibilidade de um node e manter o serviço ao usuário ativo. Para estes testes vamos interromper o 1° node.
+2. **Failover automático** - O CockroachDB também consegue detectar automaticamente a indisponibilidade de um node e manter o serviço ao usuário ativo. Para estes testes vamos interromper o 2° node.
 
 ```bash
 $ docker stop roach1
@@ -1278,7 +1296,7 @@ e9db89e8f36f   cockroachdb/cockroach:v20.2.2   "/cockroach/cockroac…"   3 week
 44ce3d718ba7   cockroachdb/cockroach:v20.2.2   "/cockroach/cockroac…"   3 weeks ago   Up About a minute   0.0.0.0:8080->8080/tcp, 0.0.0.0:26257->26257/tcp   roach1
 ```
 
-Outra maneira de verificar o status do cluster é acessando [http://localhost:8080/]. Veja o resultado:
+Outra maneira de verificar o status do cluster é acessando [(http://localhost:8080/)]. Veja o resultado:
 
 <p align="center">
 <img src="./images/cockroachdb_node_status.png" width="1267">
@@ -1691,9 +1709,12 @@ Retorno:
 
 <a id="MySQL-2020c"></a>
 - MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
+
+<a id="MySQL-2020c"></a>
+- MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
   
-<a id="Cockroach-2020a"></a>
-- Cockroach Labs. [What is CockroachDB, 2020a](https://www.cockroachlabs.com/docs/stable/frequently-asked-questions.html). Acesso em 16 out 2020 às 17h30m.
+<a id="Caleblloyd-2020a"></a>
+- Caleb Lloyd. [Concurrency Benchmark Results, 2020a](https://github.com/caleblloyd/MySqlCockroachBench/wiki/Concurrency-Benchmark-Results). Acesso em 30 dez 2020 às 10h30m.
 
 <a id="Cockroach-2020b"></a>
 - Cockroach Labs. [Architecture Overview, 2020b](https://www.cockroachlabs.com/docs/stable/architecture/overview.html). Acesso em 17 out 2020 às 15h30m.
@@ -1740,3 +1761,6 @@ Systems and Control (ICISC), 2017 International Conference on. [S.l.], 2017. p. 
 
 <a id="[Silberschatz-2006"></a>
 - SILBERSCHATZ, A.; KORTH, H. F.; SUDARSHAN, S. Sistema de banco de dados. 5 ed. Rio de Janeiro: Elsevier, 2006. p. 300.
+
+<a id="Wikipedia-2020a"></a>
+- Wikipédia. [Benchmark (computação), 2020a](https://pt.wikipedia.org/wiki/Benchmark_(computa%C3%A7%C3%A3o)). Acesso em 03 dec 2020 às 19h10m.
