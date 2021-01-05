@@ -780,11 +780,11 @@ Acesse o Banco de Dados northwind.
 mysql> use northwind
 ```
 
-Execute os comandos de *create* para criar as tabelas ([Lista de comandos aqui])(https://github.com/ailtonmorais/sample/northwind-tables-mysql.sql).
+Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-tables-mysql.sql).
 
 Importante: Para utilizar os recursos do MySQL Cluster todas as tabelas devem obrigatoriamente ter o **ENGINE=NDBCLUSTER**.
 
-Execute os comandos de *insert* para popular as tabelas categories, suppliers e products ([Lista de comandos aqui])(https://github.com/ailtonmorais/sample/northwind-data-mysql.sql):
+Execute os comandos de *insert* para popular as tabelas categories, suppliers e products: [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-data-mysql.sql):
 
 Agora vamos reiniciar o node de dados e SQL que estão fora de operação.
 
@@ -910,7 +910,7 @@ Retorno:
 <a id="pratica-cockroachdb"></a>
 ### CockroachDB
 
-A replicação, distribuição, rebalanceamento e resiliência automáticos são pontos fortes do CockroachDB para garantir um alto nível de disponibilidade. Vamos ver alguns coneitos na prática:
+A replicação, distribuição, rebalanceamento e resiliência automáticos são pontos fortes do CockroachDB para garantir um alto nível de disponibilidade. Vamos ver alguns conceitos na prática:
 
 Importante lembrar que temos 3 nodes disponíveis para os nossos testes.
 
@@ -1032,7 +1032,7 @@ Acesse o Banco de Dados northwind.
 root@:26257/northwind> use northwind;
 ```
 
-Execute os comandos de *create* para criar as tabelas ([Lista de comandos aqui])(https://github.com/ailtonmorais/sample/northwind-tables-cockroach.sql).
+Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-tables-cockroach.sql).
 
 ```bash
 root@:26257/defaultdb> CREATE TABLE categories (
@@ -1042,7 +1042,7 @@ root@:26257/defaultdb> CREATE TABLE categories (
     picture bytea
 );
 
-Execute os comandos de *insert* para popular as tabelas categories, suppliers e products ([Lista de comandos aqui])(https://github.com/ailtonmorais/sample/northwind-data-cockroach.sql):
+Execute os comandos de *insert* para popular as tabelas categories, suppliers e products:  [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-data-cockroach.sql).
 
 Agora vamos reiniciar o 2° node que está fora de operação.
 
