@@ -780,11 +780,11 @@ Acesse o Banco de Dados northwind.
 mysql> use northwind
 ```
 
-Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-tables-mysql.sql).
+Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-tables-mysql.sql).
 
 Importante: Para utilizar os recursos do MySQL Cluster todas as tabelas devem obrigatoriamente ter o **ENGINE=NDBCLUSTER**.
 
-Execute os comandos de *insert* para popular as tabelas categories, suppliers e products: [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-data-mysql.sql):
+Execute os comandos de *insert* para popular as tabelas categories, suppliers e products: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-mysql.sql):
 
 Agora vamos reiniciar o node de dados e SQL que estão fora de operação.
 
@@ -1032,17 +1032,9 @@ Acesse o Banco de Dados northwind.
 root@:26257/northwind> use northwind;
 ```
 
-Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-tables-cockroach.sql).
+Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-tables-cockroach.sql).
 
-```bash
-root@:26257/defaultdb> CREATE TABLE categories (
-    category_id smallint NOT NULL PRIMARY KEY,
-    category_name character varying(15) NOT NULL,
-    description text,
-    picture bytea
-);
-
-Execute os comandos de *insert* para popular as tabelas categories, suppliers e products:  [Lista de comandos aqui](https://github.com/ailtonmorais/sample/northwind-data-cockroach.sql).
+Execute os comandos de *insert* para popular as tabelas categories, suppliers e products:  [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-cockroach.sql).
 
 Agora vamos reiniciar o 2° node que está fora de operação.
 
@@ -1155,7 +1147,7 @@ Benchmarks provêm um método de comparação da performance de vários subsiste
 
 Para este estudo de caso vamos utilizar um teste pratico de simultaneidade de operações publicado no github [(Caleblloyd 2020a)](#caleblloyd-2020a). Caso tenha o MySQL e CockroachDB é possível reproduzir os mesmmos testes baixando os scripts disponibilizados no repositório. Acompanhe os resultados obtidos:
 
-- 10 conexões simultâneas. O resultado é o valor em **segundos**.
+- 10 conexões simultâneas. O resultado é o total de **segundos** necessário para finalizar todas as operações.
 
 Teste          | MySQL | CockroachDB 
 -------------- |-------|-------------
@@ -1167,7 +1159,7 @@ Teste          | MySQL | CockroachDB
 100x Update    | 1.14  | 5.55
 
 
-- 100 conexões simultâneas. O resultado é o valor em **segundos**.
+- 100 conexões simultâneas. O resultado é o total de **segundos** necessário para finalizar todas as operações.
 
 Teste          | MySQL | CockroachDB 
 -------------- |-------|-------------
@@ -1178,7 +1170,32 @@ Teste          | MySQL | CockroachDB
 10x Update     | 0.25  | 2.99
 100x Update    | 2.13  | 26.55
 
+Conforme o teste de simultaneidade apresentado acima o MySQL foi superior ao CockroachDB em todos as operações independente de ter 10 ou 100 conexões simultâneas.
 
+O desempenho é algo muito complicado de medir em um banco de dados. O desempenho do CockroachDB certamente é afetado por seu modelo de consistência. Em particular, CockroachDB lida com transações usando isolamento serializável e grava usando replicação de consenso.
+
+<a id="conclusao"></a>
+## Conclusão
+
+Ao longo deste tutorial foi possível acompanhar todo o processo para prova do conceito de disponibilidade do MySQL Cluster e CockroachDB. Foi apresentado os seguintes processos:
+
+1. Instalação
+2. Configuração
+3. Criação do Banco de Dados
+4. Criação das Tabelas
+5. Inclusão de Registros nas Tabelas
+6. Prova do Conceito de Disponibilidade
+7. Benchmark
+
+Com o ambiente criado foi realizado os mesmos tipos de testes para verificar o comportamento de cada Banco de Dados em particular. Na seção de [(Alta Disponibilidade)](#disponibilidade) temos os principais conceitos que o MySQL Cluster e CockroachDB utilizam para garantir um alto nível de disponibilidade, mas nos testes práticos o foco foi:
+
+1. Replicação
+2. Failover automático
+3. Autocorreção
+
+Foi respeitado a recomendação da documentação oficial de cada Banco de Dados para ter no mínimo de três computadores (3 nós) para executar um cluster viável e com isso aproveitar a as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos.
+
+Em resumo os Banco de Dados escolhidos atenderam o conceito de Disponibilidade a partir da Arquitetura proposta e nos testes de simultaneidade o MySQL foi muito superior ao CockroachDB.
 
 <a id="referencias"></a>
 # Referências Bibliográficas
