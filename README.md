@@ -29,9 +29,8 @@
 	* [MySQL Cluster](#pratica-mysqlcluster)
 	* [CockroachDB](#pratica-cockroachdb)
 6. [Benchmark - MySQL vs CockroachDB](#benchmark)
-7. [Conclusão](#conclusao)	
-8. [Glossário](#glossario)
-9. [Referências Bibliográficas](#referencias)
+7. [Conclusão](#conclusao)
+8. [Referências Bibliográficas](#referencias)
 
 <a id="introducao"></a>
 ## Introdução
