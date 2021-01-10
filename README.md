@@ -40,19 +40,19 @@ A proposta do tutorial é apresentar o passo a passo desde a instalação, confi
 <a id="sobre-mysqlcluster"></a>
 ### MySQL Cluster
 
-MySQL Cluster é um Banco de Dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
+MySQL Cluster é um banco de dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
 
-O Cluster MySQL tem replicação entre clusters em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados o que torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
+O Cluster MySQL tem replicação entre *clusters* em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados o que torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
 
 <a id="sobre-cockroachdb"></a>
 ### CockroachDB
 
-CockroachDB é um Banco de Dados SQL distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de Datacenter com interrupção de latência mínima e sem intervenção manual, suporta transações ACID fortemente consistentes e fornece uma API SQL familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
+CockroachDB é um banco de dados *SQL* distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de *datacenter* com interrupção de latência mínima e sem intervenção manual, suporta transações *ACID* fortemente consistentes e fornece uma *API SQL* familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
 
 <a id="caso"></a>
 ### Estudo de Caso
 
-Neste tutorial será utilizado o Banco de Dados do Northwind que foi criado pela Microsoft para atender os seus produtos, mas ao longo do tempo se tornou uma amostra bastante utilizada em tutoriais de Banco de Dados não desenvolvidos pela Microsoft. Dentre as amostras do Banco de Dados Northwind podemos destacar:
+Neste tutorial será utilizado o banco de dados do *Northwind* que foi criado pela Microsoft para atender os seus produtos, mas ao longo do tempo se tornou uma amostra bastante utilizada em tutoriais de banco de dados não desenvolvidos pela Microsoft. Dentre as amostras do banco de bados *Northwind* podemos destacar:
 
 * Suppliers
   
@@ -66,7 +66,7 @@ Neste tutorial será utilizado o Banco de Dados do Northwind que foi criado pela
   
 * Orders
 
-No total o Banco de Dados Northwind contém 14 tabelas. O diagrama com o relacionamento entre as tabelas pode ser visto abaixo:
+No total o banco de dados *Northwind* contém 14 tabelas. O diagrama com o relacionamento entre as tabelas pode ser visto abaixo:
 
 <p align="center">
 <img src="./images/northwind-er-diagram.png" width="974">
@@ -76,15 +76,15 @@ No total o Banco de Dados Northwind contém 14 tabelas. O diagrama com o relacio
 <a id="geral"></a>
 ## Visão Geral
 
-Os Bancos de Dados relacionais surguiram para necessidade de armazenamento de dados, mas na época não existia as tecnologias Web e os diversos tipos de dispositivos que geram uma enorme quantidade de dados se compararmos com a nossa realidade atual.
+Os bancos de dados relacionais surguiram para necessidade de armazenamento de dados, mas na época não existia as tecnologias *Web* e os diversos tipos de dispositivos que geram uma enorme quantidade de dados se compararmos com a nossa realidade atual.
 
 Com a evolução tecnológica e o astronômico crescimento dos dispositivos móveis conectados a internet abriu caminho para a era da Internet das Coisas e já estamos vivendo mudanças significativas na sociedade. Veja algumas declarações que demonstram tal potencial:
 
 * A  Internet das Coisas será uma revolução muito maior que a internet e os celulares juntos! [(Krco, Srdjan, et al, 2013)](#Krco-2013);
 
-* A Internet das Coisas representa uma nova inteligência para os negócios, É uma mudança de paradigma do consumo, uma revolução do comportamento humano, um caminho para um novo mundo onde tudo e todos estarão conectados e sem fronteiras. Um caminho para um mundo que ainda não imaginamos [(Dias, 2016)](#Dias-2016).
+* A Internet das Coisas representa uma nova inteligência para os negócios, é uma mudança de paradigma do consumo, uma revolução do comportamento humano, um caminho para um novo mundo onde tudo e todos estarão conectados e sem fronteiras. Um caminho para um mundo que ainda não imaginamos [(Dias, 2016)](#Dias-2016).
 
-A partir destes desafios surgiram os novos sistemas de Banco de Dados nomeados como **NoSQL** (Not Only SQL). Estas soluções fornecem alta disponbilidade, escalabilidade e uma arquitetura distribuída com crescimento horizontal. Mesmo sendo capaz de manipular grandes quantidades de dados, os Banco de Dados NoSQL geralmente não possuem suporte para as propriedades ACID:
+A partir destes desafios surgiram os novos sistemas de banco de dados nomeados como *NoSQL* (*Not Only SQL*). Estas soluções fornecem alta disponbilidade, escalabilidade e uma arquitetura distribuída com crescimento horizontal. Mesmo sendo capaz de manipular grandes quantidades de dados, os banco de dados *NoSQL* geralmente não possuem suporte para as propriedades *ACID*:
 
 * **A**tomicity: Transação deve ser executado por completo ou não executada;
 
@@ -94,11 +94,11 @@ A partir destes desafios surgiram os novos sistemas de Banco de Dados nomeados c
 
 * **D**urability: Garante os dados disponíveis em definitivo.
 
-Para quebrar alguns paradgimas foi criado os sistemas de Banco de Dados **NewSQL** que combinam funcionalidades do modelo relacional e NoSQL. Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) os sistemas **NewSQL** são soluções modernas que buscam prover o mesmo desempenho escalável dos Bancos de Dados **NoSQL** para cargas de trabalho **OLTP** com tı́pico suporte completo a todas as propriedades **ACID**, como encontrado nos Banco de Dados Relacionais.
+Para quebrar alguns paradgimas foi criado os sistemas de banco de dados *NewSQL* que combinam funcionalidades do modelo relacional e *NoSQL*. Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) os sistemas *NewSQL* são soluções modernas que buscam prover o mesmo desempenho escalável dos bancos de dados *NoSQL* para cargas de trabalho *OLTP* com tı́pico suporte completo a todas as propriedades *ACID*, como encontrado nos banco de dados relacionais.
 
-Os sistemas de Banco de Dados NewSQL são adequados para aplicações que utilizavam o **SGBD** tradicional, mas que surgiu a necessidade de escalabilidade adicional e aprimoramento de desempenho [(YUAN, et al, 2015)](#Yuan-2015).
+Os sistemas de banco de dados *NewSQL* são adequados para aplicações que utilizavam o *SGBD* tradicional, mas que surgiu a necessidade de escalabilidade adicional e aprimoramento de desempenho [(YUAN, et al, 2015)](#Yuan-2015).
 
-Os sistemas de Banco de Dados NewSQL tem como característica a execução de transações de leitura e gravação que:
+Os sistemas de banco de dados *NewSQL* tem como característica a execução de transações de leitura e gravação que:
 
 * São de curta duração;
 
@@ -108,33 +108,33 @@ Os sistemas de Banco de Dados NewSQL tem como característica a execução de tr
 
 * Possuem consultas repetidas com diferentes entradas.
 
-De acordo com [Pavlo e Aslett, 2016](#Pavlo-2016) pode existir uma caracterização mais restrita com a implementação de um sistema de Banco de Dados NewSQL que utiliza:
+De acordo com [Pavlo e Aslett, 2016](#Pavlo-2016) pode existir uma caracterização mais restrita com a implementação de um sistema de banco de dados *NewSQL* que utiliza:
 
 * Um esquema de controle de simultaneidade sem bloqueio;
 
 * Uma arquitetura distribuída não compartilhada.
 
-[STONEBRAKER e CATTEL, 2011](#STONEBRAKER-CATTEL-2011) definem as cinco principais características de um SGBD NewSQL abaixo:
+[STONEBRAKER e CATTEL, 2011](#STONEBRAKER-CATTEL-2011) definem as cinco principais características de um *SGBD NewSQL* abaixo:
 
-1. SQL como o principal mecanismo de interação de aplicativos;
+1. *SQL* como o principal mecanismo de interação de aplicativos;
 
-2. Suporte ACID para transações;
+2. Suporte *ACID* para transações;
   
 3. Um mecanismo de controle de simultaneidade não bloqueável, portanto as leituras em tempo real não entrarão em conflito com as escritas;
 
-4. Uma arquitetura que oferece um desempenho por nó muito maior que o disponível nas soluções SGBDs tradicionais;
+4. Uma arquitetura que oferece um desempenho por nó muito maior que o disponível nas soluções *SGBDs* tradicionais;
 
 5. Uma arquitetura de escala, não compartilhada, capaz de funcionar em um grande número de nós sem sofrerem estrangulamentos.
 
-Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) as três categorias que melhor representam os sistemas de Banco de Dados NewSQL são:
+Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) as três categorias que melhor representam os sistemas de banco de dados *NewSQL* são:
 
 1. Sistemas inovadores construídos a partir do zero usando uma nova arquitetura;
 
-2. Middleware que re-implementam a mesma infra-estrutura que foi desenvolvida na década de 2000 pelo Google e outros;
+2. *Middleware* que re-implementam a mesma infra-estrutura que foi desenvolvida na década de 2000 pelo Google e outros;
    
 3. Ofertas de banco de dados como serviço de provedores de computação em nuvem que também são baseadas em novas arquiteturas.
 
-Certamente podemos considerar que os sistemas de Banco de Dados NewSQL conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [KAUR, 2017](#Kaur-2017) o NewSQL deve ser considerado como uma alternativa ao NoSQL ou banco de dados relacional clássico para novos aplicativos OLTP.
+Certamente podemos considerar que os sistemas de banco de dados *NewSQL* conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [KAUR, 2017](#Kaur-2017) o *NewSQL* deve ser considerado como uma alternativa ao *NoSQL* ou banco de dados relacional clássico para novos aplicativos *OLTP*.
 
 <a id="disponibilidade"></a>
 ## Alta Disponibilidade
@@ -154,34 +154,34 @@ Para garantir a alta disponibilidade o MySQL Cluster se apoia em [(MySQL 2020b)]
 
 * **Arquitetura de nada compartilhado**: Nenhum ponto único de falha, cada nó tem seu próprio disco e memória, portanto, o risco de uma falha causada por componentes compartilhados, como armazenamento, é eliminado;
 
-* **Replicação geográfica**: A replicação geográfica permite que os nós sejam espelhados em data centers remotos para recuperação de desastres.
+* **Replicação geográfica**: A replicação geográfica permite que os nós sejam espelhados em *data centers* remotos para recuperação de desastres.
 
 <a id="disponibilidade-cockroachdb"></a>
 ### CockroachDB
 
 Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade [(Cockroach Labs 2020b)](#Cockroach-2020b):
 
-* **Consistência**: Usa a "consistência" tanto no sentido da semântica ACID (Atomicity, Consistency, Isolation, Durability) quanto no teorema CAP (Consistency, Availability, Partition Tolerance), embora menos formalmente do que qualquer definição. O objetivo é garantir os dados livres de anomalias;
+* **Consistência**: Usa a "consistência" tanto no sentido da semântica *ACID* (*Atomicity*, *Consistency*, *Isolation*, *Durability*) quanto no teorema *CAP* (*Consistency*, *Availability*, *Partition Tolerance*), embora menos formalmente do que qualquer definição. O objetivo é garantir os dados livres de anomalias;
 
-* **Intervalo**: Armazena todos os dados do usuário (tabelas, índices, etc.) e quase todos os dados do sistema em um mapa gigante classificado de pares de chave-valor. Este keyspace é dividido em "intervalos", pedaços contíguos do keyspace, de forma que cada chave pode sempre ser encontrada em um único intervalo;
+* **Intervalo**: Armazena todos os dados do usuário (tabelas, índices, etc.) e quase todos os dados do sistema em um mapa gigante classificado de pares de chave-valor. Este *keyspace* é dividido em "intervalos", pedaços contíguos do *keyspace*, de forma que cada chave pode sempre ser encontrada em um único intervalo;
 
-* **Consenso**: Quando um Intervalo recebe uma gravação, um quorum de nós contendo réplicas do intervalo confirma a gravação. Isso significa que seus dados são armazenados com segurança e a maioria dos nós concorda com o estado atual do banco de dados, mesmo se alguns dos nós estiverem offline. Quando uma gravação não chega a um consenso, o progresso de encaminhamento é interrompido para manter a consistência dentro do cluster;
+* **Consenso**: Quando um intervalo recebe uma gravação, um quorum de nós contendo réplicas do intervalo confirma a gravação. Isso significa que seus dados são armazenados com segurança e a maioria dos nós concorda com o estado atual do banco de dados, mesmo se alguns dos nós estiverem *offline*. Quando uma gravação não chega a um consenso, o progresso de encaminhamento é interrompido para manter a consistência dentro do *cluster*;
 
 * **Replicação**: Criação e distribuição de cópias de dados, bem como a garantia de que as cópias permaneçam consistentes. No entanto, existem vários tipos de replicação: a saber, síncrona e assíncrona. O CockroachDB usa a replicação síncrona que requer que todas as gravações se propaguem para um quorum de cópias dos dados antes de serem consideradas confirmadas;
 
-* **Transações**: Conjunto de operações realizadas em seu banco de dados que atendem aos requisitos da semântica ACID. Este é um componente crucial para um sistema consistente confie no seu banco de dados;
+* **Transações**: Conjunto de operações realizadas em seu banco de dados que atendem aos requisitos da semântica *ACID*. Este é um componente crucial para um sistema consistente confie no seu banco de dados;
 
-* **Disponibilidade Multi-ativa**: O consenso de alta disponibilidade permite que cada nó no cluster controle leituras e gravações para um subconjunto dos dados armazenados (em uma base por intervalo).
+* **Disponibilidade Multi-ativa**: O consenso de alta disponibilidade permite que cada nó no *cluster* controle leituras e gravações para um subconjunto dos dados armazenados (em uma base por intervalo).
 
 <a id="resiliencia"></a>
 ## Resiliência a Falhas
 
-A confiabiliade de um sistema gerenciador de Banco de Dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
+A confiabiliade de um sistema gerenciador de banco de dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
 
 <a id="resiliencia-mysqlcluster"></a>
 ### MySQL Cluster
 
-No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós SQL, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
+No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós *SQL*, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
@@ -191,7 +191,7 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 <a id="resiliencia-cockroachdb"></a>
 ### CockroachDB
 
-No mínimo de três computadores (3 nós) para executar um cluster viável, quando você estiver pronto para executar o seu sistema em produção em uma única região. É importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [(Cockroach 2020c)](#Cockroach-2020c).
+No mínimo de três computadores (3 nós) para executar um *cluster* viável, quando você estiver pronto para executar o seu sistema em produção em uma única região. É importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [(Cockroach 2020c)](#Cockroach-2020c).
 
 <p align="center">
 <img src="./images/topology_basic_production_v1.png" width="960">
@@ -201,7 +201,7 @@ No mínimo de três computadores (3 nós) para executar um cluster viável, quan
 <a id="instalacao"></a>
 ## Instalação e Configuração
 
-A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição Linux Desktop conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/). É importante lembrar que os Banco de Dados **MySQL Cluster** e **CockroachDB** serão instalados no **Docker**.   
+A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição *Linux Desktop* conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/). É importante lembrar que os bancos de dados **MySQL Cluster** e **CockroachDB** serão instalados no **Docker**.   
 
 <a id="instalacao-docker"></a>
 ### Docker
@@ -251,7 +251,7 @@ $ sudo apt update
 $ sudo apt install docker-ce
 ```
 
-7. Neste o ponto o Docker deve ser instalado, o deamon iniciado e o processo ativado. Verifique executando o comando abaixo:
+7. Neste o ponto o Docker deve ser instalado, o *daemon* iniciado e o processo ativado. Verifique executando o comando abaixo:
 
 ```bash
 $ sudo systemctl status docker
@@ -282,7 +282,7 @@ Nesta seção será mostrado o processo de instalação e configuração da vers
 <br>Figura 5: MySQL Docker logo. Fonte: (Medium 2020a)</br>
 </p>
 
-Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes SQL conforme ilustrado na figura abaixo.
+Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes *SQL* conforme ilustrado na figura abaixo.
 
 <p align="center">
 <img src="./images/NDB-cluster-diagram.jpeg" width="505">
@@ -303,7 +303,7 @@ $ docker network create cluster --subnet=10.100.0.0/16
 $ sudo git clone https://github.com/mysql/mysql-docker.git
 ```
 
-3. Acesse o diretório do MySQL cluster que foi criado:
+3. Acesse o diretório do MySQL Cluster que foi criado:
 
 ```bash
 $ sudo cd mysql-docker/
@@ -359,7 +359,7 @@ ndb-connectstring=10.100.0.2
 ```bash
 $ docker build -t mysql-cluster /opt/mysql-docker/8.0/
 ```
-Após concluir todos os passos citados acima podemos iniciar o processo de criação dos nodes do cluster.
+Após concluir todos os passos citados acima podemos iniciar o processo de criação dos nodes do *cluster*.
 
 8. Crie o node de gerenciamento com o nome management1 e IP 10.100.0.2:
 
@@ -377,7 +377,7 @@ $ docker run -d --net=cluster --name=ndb1 --ip=10.100.0.3 mysql-cluster ndbd
 $ docker run -d --net=cluster --name=ndb2 --ip=10.100.0.4 mysql-cluster ndbd
 ```
 
-10. Crie os 2 nodes de SQL:
+10. Crie os 2 nodes de *SQL*:
 
 ```bash
 $ docker run -d --net=cluster --name=mysql1 --ip=10.100.0.10 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
@@ -387,13 +387,13 @@ $ docker run -d --net=cluster --name=mysql1 --ip=10.100.0.10 -e MYSQL_RANDOM_ROO
 $ docker run -d --net=cluster --name=mysql2 --ip=10.100.0.11 -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql-cluster mysqld
 ```
 
-11. Execute o comando abaixo para acessar a console cluster:
+11. Execute o comando abaixo para acessar a *console cluster*:
 
 ```bash
 $ docker run -it --net=cluster mysql-cluster ndb_mgm
 ```
 
-A console de gerenciamento do cluster será iniciada.
+A *console* de gerenciamento do *cluster* será iniciada.
 
 ```bash
 [Entrypoint] MySQL Docker Image 8.0.22-1.1.18-cluster
@@ -402,7 +402,7 @@ A console de gerenciamento do cluster será iniciada.
 ndb_mgm>
 ```
 
-12. Execute o comando "show" para verificar o status dos nodes do cluster:
+12. Execute o comando "*show*" para verificar o status dos nodes do *cluster*:
 
 ```bash
 ndb_mgm> show
@@ -428,9 +428,9 @@ id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
 ndb_mgm>
 ```
 
-Na sequência vamos configurar os nodes mysql para que permitir o login remoto no Banco de Dados. Os nodes sql foram criados com senha randômica.
+Na sequência vamos configurar os nodes MySQL para que permitir o *login* remoto no banco de dados. Os nodes *SQL* foram criados com senha randômica.
 
-13. Recupere a senha padrão do 1° node mysql (docker logs <node_name> 2>&1 | grep PASSWORD):
+13. Recupere a senha padrão do 1° node MySQL (docker logs <node_name> 2>&1 | grep PASSWORD):
 
 ```bash
 $ docker logs mysql1 2>&1 | grep PASSWORD
@@ -442,19 +442,19 @@ A senha randômica padrão será exibida.
 [Entrypoint] GENERATED ROOT PASSWORD: EaXaS)eWyx%eLULiM0c@HAMoNXLu
 ```
 
-14. Acesse o 1° node mysql (docker exec -it <node_name> mysql -uroot -p):
+14. Acesse o 1° node MySQL (docker exec -it <node_name> mysql -uroot -p):
 
 ```bash
 $ docker exec -it mysql1 mysql -uroot -p
 ```
 
-15. Digite a senha padrão do 1° node mysql:
+15. Digite a senha padrão do 1° node MySQL:
 
 ```bash
 $ Enter password:
 ```
 
-O console do 1° node do mysql será exibido.
+O *console* do 1° node do MySQL será exibido.
 
 ```bash
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -470,7 +470,7 @@ owners.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 ```
 
-16. Altere a senha padrão do 1° node mysql:
+16. Altere a senha padrão do 1° node MySQL:
 
 ```bash
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass'; 
@@ -493,7 +493,7 @@ Nesta etapa iremos instalar e configurar a versão 20.2.2 do **CockroachDB** no 
 <br>Figura 7: Cockroach logo. Fonte: (Cockroach 2020a)</br>
 </p>
 
-Ao final do processo teremos 3 nodes e cada node terá uma instância de Banco de Dados conforme podemos ver na figura abaixo.
+Ao final do processo teremos 3 nodes e cada node terá uma instância de banco de dados conforme podemos ver na figura abaixo.
 
 <p align="center">
 <img src="./images/ui_cluster_overview_3_nodes.png" width="505">
@@ -529,15 +529,15 @@ cockroachdb/cockroach:v20.2.2 start \
 ```
 
 * Antes de iniciar os demais nodes, vamos entender cada parâmetro do comando acima.
-  * **docker run**: Comando Docker que inicia um novo container;
+  * **docker run**: Comando Docker que inicia um novo *container*;
   * **-d**: Esta *flag* permite rodar o comando em *background*;
-  * **--name**: O nome do container;
-  * **--hostname**: Este é um identificador único utilizado para juntar outros nodes no cluster;
+  * **--name**: O nome do *container*;
+  * **--hostname**: Este é um identificador único utilizado para juntar outros nodes no *cluster*;
   * **--net**: O nome do identificador de rede criado no passo 1;
-  * **-p 26257:26257 -p 8080:8080**: Porta de comunicação com o node e de requisição HTTP;
-  * **-v "${PWD}/cockroach-data/roach1:/cockroach/cockroach-data"**: Caminho de armazenamento do log do node;
-  * **cockroachdb/cockroach:v20.2.2 start --insecure**: Comando que inicia o node em mode inseguro; 
-  * **--join**: Lista de *hostnames* que compoem o cluster.  
+  * **-p 26257:26257 -p 8080:8080**: Porta de comunicação com o node e de requisição *HTTP*;
+  * **-v "${PWD}/cockroach-data/roach1:/cockroach/cockroach-data"**: Caminho de armazenamento do *log* do node;
+  * **cockroachdb/cockroach:v20.2.2 start --insecure**: Comando que inicia o node em modo inseguro; 
+  * **--join**: Lista de *hostnames* que compoem o *cluster*.  
 
 4. Inicie o 2° node:
 
@@ -577,7 +577,7 @@ Execute o comando abaixo para verificar detalhes do node iniciado.
 $ grep 'node starting' cockroach-data/roach1/logs/cockroach.log -A 11
 ```
 
-O resultado deve ser parecido com o log abaixo.
+O resultado deve ser parecido com o *log* abaixo.
 
 ```bash
 CockroachDB node starting at 2021-01-02 21:36:24.902390034 +0000 UTC (took 11.9s)
@@ -599,18 +599,18 @@ clusterID:           ‹fc1b7739-d5bd-4e2b-a2b6-6d93ae12bc9a›
 <a id="pratica"></a>
 ## Disponibilidade na Prática
 
-A disponibilidade é um fator crítico que deve ser considerado ao escolher um Banco de Dados. Certamente diversos fatores podem influenciar nesta escolha, mas conforme já foi detalhado ao longo deste material temos fatores importantes que tornam o Banco de Dados mais resiliente e disponível sempre que seja necessário consultar os dados. 
+A disponibilidade é um fator crítico que deve ser considerado ao escolher um banco de dados. Certamente diversos fatores podem influenciar nesta escolha, mas conforme já foi detalhado ao longo deste material temos fatores importantes que tornam o banco de dados mais resiliente e disponível sempre que seja necessário consultar os dados. 
 
-Nas seções anteriores megulhamos em todas as características relevantes dos Bancos de Dados que foram escolhidos para este tutorial e foi mostrado com detalhes os passos para instalação e configuração de cada um deles.
+Nas seções anteriores megulhamos em todas as características relevantes dos bancos de dados que foram escolhidos para este tutorial e foi mostrado com detalhes os passos para instalação e configuração de cada um deles.
 
-A disponibilidade do Banco de Dados é um processo que envolve a melhor escolha possível para o negócio em questão, uma boa definição da Arquitetura e infra-estrutura adequada. A partir de agora vamos mostrar a disponibilidade com foco na redundância, já que construimos este caminho tendo uma estrutura resiliente e redundante para os Banco de Dados deste estudo. 
+A disponibilidade do banco de dados é um processo que envolve a melhor escolha possível para o negócio em questão, uma boa definição da arquitetura e infra-estrutura adequada. A partir de agora vamos mostrar a disponibilidade com foco na redundância, já que construimos este caminho tendo uma estrutura resiliente e redundante para os banco de dados deste estudo. 
 
 <a id="pratica-mysqlcluster"></a>
 ### MySQL Cluster
 
-Na seção de [(Alta Disponibilidade)](#disponibilidade), foi mostrado que o MySQL Cluster se apoia na replicação, failover automático, autocorreção, arquitetura sem compartilhamento e replicação geográfica para garantir um alto nível de disponibilidade. Acompanhe na prática alguns destes conceitos:
+Na seção de [(Alta Disponibilidade)](#disponibilidade), foi mostrado que o MySQL Cluster se apoia na replicação, *failover* automático, autocorreção, arquitetura sem compartilhamento e replicação geográfica para garantir um alto nível de disponibilidade. Acompanhe na prática alguns destes conceitos:
 
-1. **Replicação** - A replicação é realizada de forma síncrona para os nós de dados. É importante lembrar que temos 2 nós de dados e 2 nós SQL que são podem ser acessados diretamente pelas aplicações dependente da arquitetura de acesso que será definida. Para confirmar os nodes existentes execute o comando abaixo.
+1. **Replicação** - A replicação é realizada de forma síncrona para os nós de dados. É importante lembrar que temos 2 nós de dados e 2 nós *SQL* que podem ser acessados diretamente pelas aplicações dependendo da arquitetura de acesso que será definida. Para confirmar os nodes existentes execute o comando abaixo.
 
 ```bash
 $ docker ps
@@ -626,13 +626,13 @@ c5e38486e34f   mysql-cluster   "/entrypoint.sh ndbd"    3 weeks ago   Up About a
 7b81a0345ee7   mysql-cluster   "/entrypoint.sh ndb_…"   3 weeks ago   Up About a minute (unhealthy)   1186/tcp, 2202/tcp, 3306/tcp, 33060/tcp   management1
 ```
 
-Também é possível acessar o console de gerenciamento do Mysql Cluster. Execute o comando abaixo para iniciar o *NDB Manager*.
+Também é possível acessar o *console* de gerenciamento do Mysql Cluster. Execute o comando abaixo para iniciar o *NDB Manager*.
 
 ```bash
 $ docker run -it --net=cluster mysql-cluster ndb_mgm
 ```
 
-A tela de console deve ser exibida.
+A tela de *console* deve ser exibida.
 
 ```bash
 [Entrypoint] MySQL Docker Image 8.0.22-1.1.18-cluster
@@ -641,7 +641,7 @@ A tela de console deve ser exibida.
 ndb_mgm>
 ```
 
-Execute o comando *show* para verificar o status do cluster.
+Execute o comando *show* para verificar o status do *cluster*.
 
 ```bash
 ndb_mgm> show
@@ -672,7 +672,7 @@ Caso os nodes não estejam ativos, execute o comando abaixo para reiniciar os no
 $ docker start management1 ndb1 ndb2 mysql1 mysql2
 ```
 
-Para apresentar o conceito de replicação vamos criar o database northwind no node 1 e mostrar o resultado da replicação. Antes de executar, veja os Banco de Dados que temos nos nodes SQL.
+Para apresentar o conceito de replicação vamos criar o *database northwind* no node 1 e mostrar o resultado da replicação. Antes de executar, veja os banco de dados que temos nos nodes *SQL*.
 
 ```bash
 mysql> show databases;
@@ -688,20 +688,20 @@ mysql> show databases;
 +--------------------+
 6 rows in set (0.01 sec)
 ```
-Agora vamos acessar o 1° node SQL (docker exec -it <node_name> mysql -uroot -p).
+Agora vamos acessar o 1° node *SQL* (docker exec -it <node_name> mysql -uroot -p).
 
 ```bash
 $ docker exec -it mysql1 mysql -uroot -p
 ```
 
-Crie o Banco de Dados do nosso estudo de caso.
+Crie o banco de dados do nosso estudo de caso.
 
 ```bash
 mysql> create database northwind;
 Query OK, 1 row affected (0.38 sec)
 ```
 
-Acessando o 2° node SQL é possível confirmar que o comando foi replicado.
+Acessando o 2° node *SQL* é possível confirmar que o comando foi replicado.
 
 ```bash
 mysql> show databases;
@@ -719,15 +719,15 @@ mysql> show databases;
 7 rows in set (0.01 sec)
 ```
 
-2. **Failover automático** - O Mysql Cluster detecta automaticamente as falhas e faz o *failover* automático para os demais nós disponíveis do cluster sem interromper o serviço ao usuário.
+2. **Failover automático** - O Mysql Cluster detecta automaticamente as falhas e faz o *failover* automático para os demais nós disponíveis do *cluster* sem interromper o serviço ao usuário.
 
-Para estes testes vamos interromper 1 nó de dado e 1 nó SQL.
+Para estes testes vamos interromper 1 nó de dado e 1 nó *SQL*.
 
 ```bash
 $ docker stop mysql1 ndb2
 ```
 
-Tente acessar o 1° node SQL.
+Tente acessar o 1° node *SQL*.
 
 ```bash
 $ docker exec -it mysql1 mysql -uroot -p
@@ -739,12 +739,12 @@ O resultado será:
 Error response from daemon: Container 56887df6ca9b1a3da24043b004fa1be4500b6e09dd078a522a54f3daed08cb31 is not running
 ```
 
-Vamos verificar o status do cluster novamente.
+Vamos verificar o status do *cluster* novamente.
 
 ```bash
 ndb_mgm> show
 ```
-Veja o resultado do comando. Note que temos 2 nodes que não estão sendo executados no momento e que foram detectados automaticamente no console de gerenciamento do cluster.
+Veja o resultado do comando. Note que temos 2 nodes que não estão sendo executados no momento e que foram detectados automaticamente no *console* de gerenciamento do *cluster*.
 
 ```bash
 Cluster Configuration
@@ -763,17 +763,17 @@ id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
 ndb_mgm>
 ```
 
-3. **Autocorreção** - Quando um node que possue os dados replicados fica indisponível é importante garantir que antes de reingressar no cluster esteja com os dados atualizados. O caso do MySQL Cluster faz este trabalho com transparência sem a necessidade de intervenção manual dos usuários.
+3. **Autocorreção** - Quando um node que possue os dados replicados fica indisponível é importante garantir que antes de reingressar no cluster esteja com os dados atualizados. No caso do MySQL Cluster faz este trabalho com transparência sem a necessidade de intervenção manual dos usuários.
 
-É importante lembrar que no momento temos 1 node de dados e 1 node SQL fora de operação. Para provar o conceito de autocorreção vamos criar as tabelas e inserir dados no banco de dados northwind usando o 2° node SQL do cluster.
+É importante lembrar que no momento temos 1 node de dados e 1 node *SQL* fora de operação. Para provar o conceito de autocorreção vamos criar as tabelas e inserir dados no banco de dados *northwind* usando o 2° node *SQL* do *cluster*.
 
-Acesse o 2° node SQL.
+Acesse o 2° node *SQL*.
 
 ```bash
 $ docker exec -it mysql2 mysql -uroot -p
 ```
 
-Acesse o Banco de Dados northwind.
+Acesse o banco de dados *northwind*.
 
 ```bash
 mysql> use northwind
@@ -785,7 +785,7 @@ Importante: Para utilizar os recursos do MySQL Cluster todas as tabelas devem ob
 
 Execute os comandos de *insert* para popular as tabelas categories, suppliers e products: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-mysql.sql):
 
-Agora vamos reiniciar o node de dados e SQL que estão fora de operação.
+Agora vamos reiniciar o node de dados e *SQL* que estão fora de operação.
 
 ```bash
 $ docker start mysql1 ndb2
@@ -797,7 +797,7 @@ Se a sua console já esteja aberta, aguarde a exibição da mensagem abaixo.
 ndb_mgm> Node 3: Started (version 8.0.22)
 ```
 
-Caso contrário, verifique o status executando comando *show* na console de gerenciamento do cluster.
+Caso contrário, verifique o status executando comando *show* na *console* de gerenciamento do *cluster*.
 
 ```bash
 ndb_mgm> show
@@ -815,7 +815,7 @@ id=4	@10.100.0.10  (mysql-8.0.22 ndb-8.0.22)
 id=5	@10.100.0.11  (mysql-8.0.22 ndb-8.0.22)
 ```
 
-Chegou o momento de acessar o 1° node SQL e confirmar a **autocorreção** do node com os dados replicados.
+Chegou o momento de acessar o 1° node *SQL* e confirmar a **autocorreção** do node com os dados replicados.
 
 ```bash
 $ docker exec -it mysql1 mysql -uroot -p
@@ -827,7 +827,7 @@ Veja o resultado das tabelas criadas e os dados inseridos com os comandos listad
 mysql> use northwind;
 ```
 
-Liste as tabelas replicadas para o 1° node SQL.
+Liste as tabelas replicadas para o 1° node *SQL*.
 
 ```bash
 mysql> show tables;
@@ -933,7 +933,7 @@ Caso os nodes não estejam ativos, execute o comando abaixo para reiniciar os no
 $ docker start roach1 roach2 roach3
 ```
 
-Para apresentar o conceito de replicação vamos criar o database northwind no node 1 e mostrar o resultado da replicação. Antes de executar, veja os Banco de Dados que temos nos nodes SQL.
+Para apresentar o conceito de replicação vamos criar o *database northwind* no node 1 e mostrar o resultado da replicação. Antes de executar, veja os bancos de dados que temos nos nodes *SQL*.
 
 ```bash
   database_name | owner
@@ -945,13 +945,13 @@ Para apresentar o conceito de replicação vamos criar o database northwind no n
 (4 rows)
 ```
 
-Agora vamos acessar o 1° node SQL (docker exec -it <node_name> ./cockroach sql --insecure).
+Agora vamos acessar o 1° node *SQL* (docker exec -it <node_name> ./cockroach sql --insecure).
 
 ```bash
 $ docker exec -it roach1 ./cockroach sql --insecure
 ```
 
-Crie o Banco de Dados do nosso estudo de caso.
+Crie o banco de dados do nosso estudo de caso.
 
 ```bash
 root@:26257/defaultdb> create database northwind;
@@ -960,7 +960,7 @@ CREATE DATABASE
 Time: 513ms total (execution 512ms / network 1ms)
 ```
 
-Acessando o 2° e o 3° node SQL é possível confirmar que o comando foi replicado.
+Acessando o 2° e o 3° node *SQL* é possível confirmar que o comando foi replicado.
 
 ```bash
 root@:26257/defaultdb> show databases;
@@ -994,7 +994,7 @@ O resultado será:
 Error response from daemon: Container 44ce3d718ba741e88c660a1747a862d5c322e0055e5ec8b3434fd6cf71832d92 is not running
 ```
 
-Vamos verificar o status do cluster novamente.
+Vamos verificar o status do *cluster* novamente.
 
 ```bash
 $ docker ps
@@ -1008,24 +1008,24 @@ e9db89e8f36f   cockroachdb/cockroach:v20.2.2   "/cockroach/cockroac…"   3 week
 44ce3d718ba7   cockroachdb/cockroach:v20.2.2   "/cockroach/cockroac…"   3 weeks ago   Up About a minute   0.0.0.0:8080->8080/tcp, 0.0.0.0:26257->26257/tcp   roach1
 ```
 
-Outra maneira de verificar o status do cluster é acessando [(http://localhost:8080/)]. Veja o resultado:
+Outra maneira de verificar o status do *cluster* é acessando [(http://localhost:8080/)]. Veja o resultado:
 
 <p align="center">
 <img src="./images/cockroachdb_node_status.png" width="1267">
 <br>Figura 9: Node status. Fonte: Gerado pelo autor</br>
 </p>
 
-3. **Autocorreção** - No CockroachDB a resiliência automática é reponsável por garantir que um node que estava inoperante só reingresse no cluster após a atualização dos dados. Todo este processo é tranparente e não necessita de intervenção manual.
+3. **Autocorreção** - No CockroachDB a resiliência automática é reponsável por garantir que um node que estava inoperante só reingresse no *cluster* após a atualização dos dados. Todo este processo é tranparente e não necessita de intervenção manual.
 
-É importante lembrar que no momento temos 2° node fora de operação. Para provar o conceito de autocorreção vamos criar as tabelas e inserir dados no banco de dados northwind usando o 3° node SQL do cluster.
+É importante lembrar que no momento temos 2° node fora de operação. Para provar o conceito de autocorreção vamos criar as tabelas e inserir dados no banco de dados *northwind* usando o 3° node *SQL* do *cluster*.
 
-Acesse o 3° node SQL.
+Acesse o 3° node *SQL*.
 
 ```bash
 $ docker exec -it roach3 ./cockroach sql --insecure
 ```
 
-Acesse o Banco de Dados northwind.
+Acesse o banco de dados *northwind*.
 
 ```bash
 root@:26257/northwind> use northwind;
@@ -1142,9 +1142,9 @@ Retorno:
 <a id="benchmark"></a>
 ## Benchmark - MySQL vs CockroachDB
 
-Benchmarks provêm um método de comparação da performance de vários subsistemas dentre as diferentes arquiteturas de chips e sistemas. Benchmarking é útil para o entendimento de como o gerenciador de banco de dados responde sob a variação de condições. Pode-se criar cenários que testam o tratamento de deadlock, performance dos utilitários, diferentes métodos de carregar dados, características da taxa de transição quando mais usuários são adicionados e ainda o efeito na aplicação usando uma nova versão do produto [(Wikipédia 2020a)](#Wikipedia-2020a).
+*Benchmarks* provêm um método de comparação da *performance* de vários subsistemas dentre as diferentes arquiteturas de *chips* e sistemas. *Benchmarking* é útil para o entendimento de como o gerenciador de banco de dados responde sob a variação de condições. Pode-se criar cenários que testam o tratamento de *deadlock*, *performance* dos utilitários, diferentes métodos de carregar dados, características da taxa de transição quando mais usuários são adicionados e ainda o efeito na aplicação usando uma nova versão do produto [(Wikipédia 2020a)](#Wikipedia-2020a).
 
-Para este estudo de caso vamos utilizar um teste pratico de simultaneidade de operações publicado no github [(Caleblloyd 2020a)](#caleblloyd-2020a). Caso tenha o MySQL e CockroachDB é possível reproduzir os mesmmos testes baixando os scripts disponibilizados no repositório. Acompanhe os resultados obtidos:
+Para este estudo de caso vamos utilizar um teste prático de simultaneidade de operações publicado no github [(Caleblloyd 2020a)](#caleblloyd-2020a). Caso tenha o MySQL e CockroachDB é possível reproduzir os mesmos testes baixando os *scripts* disponibilizados no repositório. Acompanhe os resultados obtidos:
 
 - 10 conexões simultâneas. O resultado é o total de **segundos** necessário para finalizar todas as operações.
 
@@ -1180,21 +1180,21 @@ Ao longo deste tutorial foi possível acompanhar todo o processo para prova do c
 
 1. Instalação
 2. Configuração
-3. Criação do Banco de Dados
-4. Criação das Tabelas
-5. Inclusão de Registros nas Tabelas
-6. Prova do Conceito de Disponibilidade
-7. Benchmark
+3. Criação do banco de dados
+4. Criação das tabelas
+5. Inclusão de registros nas tabelas
+6. Prova do conceito de disponibilidade
+7. *Benchmark*
 
-Com o ambiente criado foi realizado os mesmos tipos de testes para verificar o comportamento de cada Banco de Dados em particular. Na seção de [(Alta Disponibilidade)](#disponibilidade) temos os principais conceitos que o MySQL Cluster e CockroachDB utilizam para garantir um alto nível de disponibilidade, mas nos testes práticos o foco foi:
+Com o ambiente criado foi realizado os mesmos tipos de testes para verificar o comportamento de cada banco de dados em particular. Na seção de [(Alta Disponibilidade)](#disponibilidade) temos os principais conceitos que o MySQL Cluster e CockroachDB utilizam para garantir um alto nível de disponibilidade, mas nos testes práticos o foco foi:
 
 1. Replicação
 2. Failover automático
 3. Autocorreção
 
-Foi respeitado a recomendação da documentação oficial de cada Banco de Dados para ter no mínimo de três computadores (3 nós) para executar um cluster viável e com isso aproveitar a as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos.
+Foi respeitado a recomendação da documentação oficial de cada banco de dados para ter no mínimo de três computadores (3 nós) para executar um cluster viável e com isso aproveitar a as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos.
 
-Em resumo os Banco de Dados escolhidos atenderam o conceito de Disponibilidade a partir da Arquitetura proposta e nos testes de simultaneidade o MySQL foi muito superior ao CockroachDB.
+Em resumo os banco de dados escolhidos atenderam o conceito de disponibilidade a partir da arquitetura proposta e nos testes de simultaneidade o MySQL foi muito superior ao CockroachDB.
 
 <a id="referencias"></a>
 # Referências Bibliográficas
