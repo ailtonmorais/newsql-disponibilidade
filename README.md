@@ -11,22 +11,22 @@
 <a id="indice"></a>
 # Índice
 1. [Introdução](#introducao)    
-	1.1. [MySQL Cluster](#sobre-mysqlcluster)
-	1.2. [CockroachDB](#sobre-cockroachdb)
+	1.1. [MySQL Cluster](#sobre-mysqlcluster)<br>
+	1.2. [CockroachDB](#sobre-cockroachdb)<br>
   1.3. [Estudo de Caso](#caso)	
 2. [Visão Geral](#geral)    
-	2.1. [Alta Disponibilidade](#disponibilidade)
-    	2.1.1. [MySQL Cluster](#disponibilidade-mysqlcluster)
-    	2.1.2. [CockroachDB](#disponibilidade-cockroachdb)        
-3. [Resiliência a Falhas](#resiliencia)	
-    3.1. [MySQL Cluster](#resiliencia-mysqlcluster)
-    3.2. [CockroachDB](#resiliencia-cockroachdb)
-4. [Instalação e Configuração](#instalacao)
-	4.1. [Docker](#instalacao-docker)
-	4.2. [MySQL Cluster](#instalacao-mysqlcluster)
+	2.1. [Alta Disponibilidade](#disponibilidade)<br>
+    2.1.1. [MySQL Cluster](#disponibilidade-mysqlcluster)<br>
+    2.1.2. [CockroachDB](#disponibilidade-cockroachdb)        
+3. [Resiliência a Falhas](#resiliencia)<br>
+  3.1. [MySQL Cluster](#resiliencia-mysqlcluster)<br>
+  3.2. [CockroachDB](#resiliencia-cockroachdb)
+4. [Instalação e Configuração](#instalacao)<br>
+	4.1. [Docker](#instalacao-docker)<br>
+	4.2. [MySQL Cluster](#instalacao-mysqlcluster)<br>
 	4.3. [CockroachDB](#instalacao-cockroachdb)
-5. [Disponibilidade na Prática](#pratica)
-	5.1. [MySQL Cluster](#pratica-mysqlcluster)
+5. [Disponibilidade na Prática](#pratica)<br>
+	5.1. [MySQL Cluster](#pratica-mysqlcluster)<br>
 	5.2. [CockroachDB](#pratica-cockroachdb)
 6. [Benchmark - MySQL vs CockroachDB](#benchmark)
 7. [Conclusão](#conclusao)
