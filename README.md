@@ -194,6 +194,8 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 <br>Figura 2: Sem um único ponto de falha, o MySQL Cluster oferece extrema resiliência a falhas. Fonte: (MySQL 2020b)</br>
 </p>
 
+Na figura acima temos uma arquitetura que garante nenhum ponto de falha, ou seja, cada nó tem o seu próprio disco e memória o que elimina uma falha em componentes compartilhado.
+
 <a id="resiliencia-cockroachdb"></a>
 ### 3.2. CockroachDB
 
@@ -611,9 +613,11 @@ clusterID:           ‹fc1b7739-d5bd-4e2b-a2b6-6d93ae12bc9a›
 
 A disponibilidade é um fator crítico que deve ser considerado ao escolher um banco de dados. Certamente diversos fatores podem influenciar nesta escolha, mas conforme já foi detalhado ao longo deste material temos fatores importantes que tornam o banco de dados mais resiliente e disponível sempre que seja necessário consultar os dados. 
 
-Nas seções anteriores megulhamos em todas as características relevantes dos bancos de dados que foram escolhidos para este tutorial e foi mostrado com detalhes os passos para instalação e configuração de cada um deles.
+Nas seções anteriores mergulhamos em todas as características relevantes dos bancos de dados que foram escolhidos para este tutorial e foi mostrado com detalhes os passos para instalação e configuração de cada um deles. A disponibilidade do banco de dados é um processo que envolve a melhor escolha possível para o negócio em questão, uma boa definição da arquitetura e infra-estrutura adequada.
 
-A disponibilidade do banco de dados é um processo que envolve a melhor escolha possível para o negócio em questão, uma boa definição da arquitetura e infra-estrutura adequada. A partir de agora vamos mostrar a disponibilidade com foco na redundância, já que construimos este caminho tendo uma estrutura resiliente e redundante para os banco de dados deste estudo. 
+Na disponibilidade na pŕatica, vamos explorar o conceito de **replicação** que é realizado de forma síncrona pelos bancos de dados deste estudo. Neste caso iremos criar um novo *database* em um node e confirmar se o dado foi replicado para os demais nodes do *cluster*. Para validar o conceito de ***failover* automático** vamos parar um node do cluster e verificar na ferramenta de monitoramento disponibilizada pelo banco de dados se o node é detectado como indisponível para uso. O nosso último teste será com o conceito de **autocorreção**, tendo o objetivo de confirmar se ao reiniciar um node que esteja indisponível o banco de dados primeiro atualiza este node com os dados mais recentes antes de permitir o reingresso no *cluster*.
+
+A partir de agora vamos mostrar a disponibilidade com foco na redundância, já que construimos este caminho tendo uma estrutura resiliente e redundante para os banco de dados deste estudo.
 
 <a id="pratica-mysqlcluster"></a>
 ### 5.1. MySQL Cluster
