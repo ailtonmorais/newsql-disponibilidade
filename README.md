@@ -90,7 +90,7 @@ Com a evolução tecnológica e o astronômico crescimento dos dispositivos móv
 
 * A Internet das Coisas representa uma nova inteligência para os negócios, é uma mudança de paradigma do consumo, uma revolução do comportamento humano, um caminho para um novo mundo onde tudo e todos estarão conectados e sem fronteiras. Um caminho para um mundo que ainda não imaginamos [[14]](#Dias-2016).
 
-A partir destes desafios surgiram os novos sistemas de banco de dados nomeados como *NoSQL* (*Not Only SQL*). Estas soluções fornecem alta disponbilidade, escalabilidade e uma arquitetura distribuída com crescimento horizontal. Mesmo sendo capaz de manipular grandes quantidades de dados, os banco de dados *NoSQL* geralmente não possuem suporte para as propriedades *ACID*:
+A partir destes desafios surgiram os novos sistemas de banco de dados nomeados como *NoSQL* (*Not Only SQL*). Estas soluções fornecem alta disponbilidade, escalabilidade e uma arquitetura distribuída com crescimento horizontal. Mesmo sendo capaz de manipular grandes quantidades de dados, os banco de dados *NoSQL* geralmente não possuem suporte para as propriedades *ACID* [[21]](#KNOB-2019):
 
 * **A**tomicity: Transação deve ser executado por completo ou não executada;
 
@@ -1270,7 +1270,7 @@ ACM SIGMOD International Conference on Management of Data. [S.l.], 2015. p. 907�
 17. KAUR, K.; SACHDEVA, M.  Performance evaluation of newsql databases. In: IEEE. Inventive
 Systems and Control (ICISC), 2017 International Conference on. [S.l.], 2017. p. 1–5.
 
-<a id="STONEBRAKER-2011"></a>
+<a id="STONEBRAKER-CATTEL-2011"></a>
 18. STONEBRAKER, Michael, CATTELL, [Rick. 10 Rules for Scalable Performance in ‘Simple Operation’ Datastores](https://doi.org/10.1145/1953122.1953144). Communications Of The Acm, v. 54, n. 6, p. 72-80, jun. 2011.
 
 <a id="Silberschatz-2006"></a>
@@ -1278,3 +1278,6 @@ Systems and Control (ICISC), 2017 International Conference on. [S.l.], 2017. p. 
 
 <a id="Wikipedia-2020a"></a>
 20. Wikipédia. [Benchmark (computação), 2020a](https://pt.wikipedia.org/wiki/Benchmark_(computa%C3%A7%C3%A3o)). Acesso em 03 dec 2020 às 19h10m.
+
+<a id="KNOB-2019"></a>
+21. KNOB, Ronan R. et al. [Uma Análise de Soluções NewSQL](https://sol.sbc.org.br/index.php/erbd/article/view/8475). In: XV Escola Regional de Banco de Dados (ERBD), 2019, Chapecó. Porto Alegre: Sociedade Brasileira de Computação, p. 21 - 30. ISSN 2595-413X.
