@@ -209,7 +209,7 @@ A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema ope
 O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada.
 
 <p align="center">
-<img src="./images/docker_logo.png" width="600">
+<img src="./images/docker_logo.png" width="336">
 <br>Figura 4: Docker logo. Fonte: (Docker 2020a)</br>
 </p>
 
@@ -278,7 +278,7 @@ Output
 Nesta seção será mostrado o processo de instalação e configuração da versão 8.0 do [MySQL Cluster](https://dev.mysql.com/doc/refman/8.0/en/mysql-cluster.html) no **Docker**. Cada node será executado em *hosts* separados usando a configuração de rede do Docker. Utilizaremos comandos do **git**, se for necessário [clique aqui](https://gist.github.com/leocomelli/2545add34e4fec21ec16) para obter mais detalhes.
 
 <p align="center">
-<img src="./images/mysql_docker.png" width="694">
+<img src="./images/mysql_docker.png" width="240">
 <br>Figura 5: MySQL Docker logo. Fonte: (Medium 2020a)</br>
 </p>
 
