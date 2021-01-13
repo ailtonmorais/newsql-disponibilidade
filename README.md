@@ -211,7 +211,11 @@ No mínimo de três computadores (3 nós) para executar um *cluster* viável, qu
 <a id="instalacao"></a>
 ## 4. Instalação e Configuração
 
-A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição *Linux Desktop* conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/). É importante lembrar que os bancos de dados **MySQL Cluster** e **CockroachDB** serão instalados no **Docker**.   
+A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição *Linux Desktop* conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/). É importante lembrar que os bancos de dados **MySQL Cluster** e **CockroachDB** serão instalados no **Docker**. Os requisitos mínimos para executar este tutorial são:
+
+* 8 GB de RAM
+* 1.80GHz de CPU
+* 10GB de espaço em disco
 
 <a id="instalacao-docker"></a>
 ### 4.1. Docker
