@@ -5,6 +5,10 @@
 <img src="./images/ufscar.png" width="166">
 </p>
 
+# Sobre
+
+Tutorial que aborda NewSQL com relação a disponibilidade como parte da avaliação da disciplina de Tópicos em Banco de Dados (2020/2) - Profa. Dra. Sahudy Gonzalez, do programa de mestrado em Ciência da Computação da UFScar Sorocaba.
+
 # NewSQL - Disponibilidade
 <sub>Autor: Ailton Morais</sub>
 
@@ -47,7 +51,7 @@ O Cluster MySQL tem replicação entre *clusters* em vários locais geográficos
 <a id="sobre-cockroachdb"></a>
 ### 1.2. CockroachDB
 
-CockroachDB é um banco de dados *SQL* distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de *datacenter* com interrupção de latência mínima e sem intervenção manual, suporta transações *ACID* fortemente consistentes e fornece uma *API SQL* familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
+CockroachDB é um banco de dados *SQL* distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de *datacenter* com interrupção de latência mínima e sem intervenção manual, suporta transações *ACID* fortemente consistentes e fornece uma *API SQL* familiar para estruturar, manipular e consultar dados [[4]](#Cockroach-2020a).
 
 <a id="caso"></a>
 ### 1.3. Estudo de Caso
@@ -116,7 +120,7 @@ De acordo com [[15]](#Pavlo-2016) pode existir uma caracterização mais restrit
 
 * Uma arquitetura distribuída não compartilhada.
 
-[STONEBRAKER e CATTEL, 2011](#STONEBRAKER-CATTEL-2011) definem as cinco principais características de um *SGBD NewSQL* abaixo:
+[STONEBRAKER e CATTEL, 2011[18]](#STONEBRAKER-CATTEL-2011) definem as cinco principais características de um *SGBD NewSQL* abaixo:
 
 1. *SQL* como o principal mecanismo de interação de aplicativos;
 
@@ -161,7 +165,7 @@ Para garantir a alta disponibilidade o MySQL Cluster se apoia em [[2]](#MySQL-20
 <a id="disponibilidade-cockroachdb"></a>
 ### 2.1.2. CockroachDB
 
-Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade [(Cockroach Labs 2020b)](#Cockroach-2020b):
+Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade [[6]](#Cockroach-2020b):
 
 * **Consistência**: Usa a "consistência" tanto no sentido da semântica *ACID* (*Atomicity*, *Consistency*, *Isolation*, *Durability*) quanto no teorema *CAP* (*Consistency*, *Availability*, *Partition Tolerance*), embora menos formalmente do que qualquer definição. O objetivo é garantir os dados livres de anomalias;
 
@@ -183,7 +187,7 @@ A confiabiliade de um sistema gerenciador de banco de dados tem um relação dir
 <a id="resiliencia-mysqlcluster"></a>
 ### 3.1. MySQL Cluster
 
-No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós *SQL*, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [[4]](#MySQL-2020c).
+No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós *SQL*, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [[3]](#MySQL-2020c).
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
@@ -785,11 +789,11 @@ Acesse o banco de dados *northwind*.
 mysql> use northwind
 ```
 
-Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-tables-mysql.sql).
+Execute os [comandos](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-tables-mysql.sql) de *create* para criar as tabelas:
 
 Importante: Para utilizar os recursos do MySQL Cluster todas as tabelas devem obrigatoriamente ter o **ENGINE=NDBCLUSTER**.
 
-Execute os comandos de *insert* para popular as tabelas categories, suppliers e products: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-mysql.sql):
+Execute os [comandos](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-mysql.sql) de *insert* para popular as tabelas categories, suppliers e products:
 
 Agora vamos reiniciar o node de dados e *SQL* que estão fora de operação.
 
@@ -1014,7 +1018,7 @@ e9db89e8f36f   cockroachdb/cockroach:v20.2.2   "/cockroach/cockroac…"   3 week
 44ce3d718ba7   cockroachdb/cockroach:v20.2.2   "/cockroach/cockroac…"   3 weeks ago   Up About a minute   0.0.0.0:8080->8080/tcp, 0.0.0.0:26257->26257/tcp   roach1
 ```
 
-Outra maneira de verificar o status do *cluster* é acessando [(http://localhost:8080/)]. Veja o resultado:
+Outra maneira de verificar o status do *cluster* é [acessando o localhost](http://localhost:8080/). Veja o resultado:
 
 <p align="center">
 <img src="./images/cockroachdb_node_status.png" width="1267">
@@ -1037,9 +1041,9 @@ Acesse o banco de dados *northwind*.
 root@:26257/northwind> use northwind;
 ```
 
-Execute os comandos de *create* para criar as tabelas: [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-tables-cockroach.sql).
+Execute os [comandos](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-tables-cockroach.sql) de *create* para criar as tabelas:
 
-Execute os comandos de *insert* para popular as tabelas categories, suppliers e products:  [Lista de comandos aqui](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-cockroach.sql).
+Execute os [comandos](https://github.com/ailtonmorais/newsql-disponibilidade/blob/master/sample/northwind-data-cockroach.sql) de *insert* para popular as tabelas categories, suppliers e products:
 
 Agora vamos reiniciar o 2° node que está fora de operação.
 
@@ -1220,8 +1224,8 @@ Em resumo os banco de dados escolhidos atenderam o conceito de disponibilidade a
 <a id="MySQL-2020c"></a>
 3. MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
 
-<a id="MySQL-2020c"></a>
-4. MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
+<a id="Cockroach-2020a"></a>
+4. Cockroach Labs. [What is CockroachDB 2020a, 2020a](https://www.cockroachlabs.com/docs/stable/frequently-asked-questions.html). Acesso em 16 out 2020 às 17h30m.
   
 <a id="Caleblloyd-2020a"></a>
 5. Caleb Lloyd. [Concurrency Benchmark Results, 2020a](https://github.com/caleblloyd/MySqlCockroachBench/wiki/Concurrency-Benchmark-Results). Acesso em 30 dez 2020 às 10h30m.
