@@ -11,46 +11,46 @@
 <a id="indice"></a>
 # Índice
 1. [Introdução](#introducao)    
-	* [MySQL Cluster](#sobre-mysqlcluster)
-	* [CockroachDB](#sobre-cockroachdb)
-    * [Estudo de Caso](#caso)	
+	1.1. [MySQL Cluster](#sobre-mysqlcluster)
+	1.2. [CockroachDB](#sobre-cockroachdb)
+  1.3. [Estudo de Caso](#caso)	
 2. [Visão Geral](#geral)    
-	* [Alta Disponibilidade](#disponibilidade)
-    	* [MySQL Cluster](#disponibilidade-mysqlcluster)
-    	* [CockroachDB](#disponibilidade-cockroachdb)        
+	2.1. [Alta Disponibilidade](#disponibilidade)
+    	2.1.1. [MySQL Cluster](#disponibilidade-mysqlcluster)
+    	2.1.2. [CockroachDB](#disponibilidade-cockroachdb)        
 3. [Resiliência a Falhas](#resiliencia)	
-    * [MySQL Cluster](#resiliencia-mysqlcluster)
-    * [CockroachDB](#resiliencia-cockroachdb)
+    3.1. [MySQL Cluster](#resiliencia-mysqlcluster)
+    3.2. [CockroachDB](#resiliencia-cockroachdb)
 4. [Instalação e Configuração](#instalacao)
-	* [Docker](#instalacao-docker)
-	* [MySQL Cluster](#instalacao-mysqlcluster)
-	* [CockroachDB](#instalacao-cockroachdb)
+	4.1. [Docker](#instalacao-docker)
+	4.2. [MySQL Cluster](#instalacao-mysqlcluster)
+	4.3. [CockroachDB](#instalacao-cockroachdb)
 5. [Disponibilidade na Prática](#pratica)
-	* [MySQL Cluster](#pratica-mysqlcluster)
-	* [CockroachDB](#pratica-cockroachdb)
+	5.1. [MySQL Cluster](#pratica-mysqlcluster)
+	5.2. [CockroachDB](#pratica-cockroachdb)
 6. [Benchmark - MySQL vs CockroachDB](#benchmark)
 7. [Conclusão](#conclusao)
 8. [Referências Bibliográficas](#referencias)
 
 <a id="introducao"></a>
-## Introdução
+## 1. Introdução
 
 A proposta do tutorial é apresentar o passo a passo desde a instalação, configuração, casos de uso e testes que irão ajudar a entender a abordagem da **disponibilidade** do [MySQL Cluster](https://www.mysql.com/products/cluster/) & [CockroachDB](https://www.cockroachlabs.com/product/)
 
 <a id="sobre-mysqlcluster"></a>
-### MySQL Cluster
+### 1.1. MySQL Cluster
 
 MySQL Cluster é um banco de dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
 
 O Cluster MySQL tem replicação entre *clusters* em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados o que torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
 
 <a id="sobre-cockroachdb"></a>
-### CockroachDB
+### 1.2. CockroachDB
 
 CockroachDB é um banco de dados *SQL* distribuído construído em um armazenamento de chave-valor transacional e fortemente consistente. Ele é dimensionado horizontalmente, sobrevive a falhas de disco, máquina, rack e até mesmo de *datacenter* com interrupção de latência mínima e sem intervenção manual, suporta transações *ACID* fortemente consistentes e fornece uma *API SQL* familiar para estruturar, manipular e consultar dados [(Cockroach Labs 2020a)](#Cockroach-2020a).
 
 <a id="caso"></a>
-### Estudo de Caso
+### 1.3. Estudo de Caso
 
 Neste tutorial será utilizado o banco de dados do *Northwind* que foi criado pela Microsoft para atender os seus produtos, mas ao longo do tempo se tornou uma amostra bastante utilizada em tutoriais de banco de dados não desenvolvidos pela Microsoft. Dentre as amostras do banco de bados *Northwind* podemos destacar:
 
@@ -73,8 +73,10 @@ No total o banco de dados *Northwind* contém 14 tabelas. O diagrama com o relac
 <br>Figura 1: Diagram ER. Fonte: (YugabyteDB 2020a)</br>
 </p>
 
+[Voltar ao índice](#indice)
+
 <a id="geral"></a>
-## Visão Geral
+## 2. Visão Geral
 
 Os bancos de dados relacionais surguiram para necessidade de armazenamento de dados, mas na época não existia as tecnologias *Web* e os diversos tipos de dispositivos que geram uma enorme quantidade de dados se compararmos com a nossa realidade atual.
 
@@ -137,12 +139,12 @@ Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) as três categorias que melhor repre
 Certamente podemos considerar que os sistemas de banco de dados *NewSQL* conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [KAUR, 2017](#Kaur-2017) o *NewSQL* deve ser considerado como uma alternativa ao *NoSQL* ou banco de dados relacional clássico para novos aplicativos *OLTP*.
 
 <a id="disponibilidade"></a>
-## Alta Disponibilidade
+## 2.1. Alta Disponibilidade
 
 A alta disponibilidade não está relacionada somente ao tempo que um sistema está acessível, mas também ao tempo que o sistema precisa para responder às solicitações dos usuários. Geralmente além dos testes é necessário prover componentes redundantes para obter um nível de disponibilidade alta mesmo em caso de falhas em parte da infra-estrutura.
 
 <a id="disponibilidade-mysqlcluster"></a>
-### MySQL Cluster
+### 2.1.1. MySQL Cluster
 
 Para garantir a alta disponibilidade o MySQL Cluster se apoia em [(MySQL 2020b)](#MySQL-2020b):
 
@@ -157,7 +159,7 @@ Para garantir a alta disponibilidade o MySQL Cluster se apoia em [(MySQL 2020b)]
 * **Replicação geográfica**: A replicação geográfica permite que os nós sejam espelhados em *data centers* remotos para recuperação de desastres.
 
 <a id="disponibilidade-cockroachdb"></a>
-### CockroachDB
+### 2.1.2. CockroachDB
 
 Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal devemos utilizar a replicação dos dados em diversos servidores. Em caso de falha de um desses servidores, podemos continuar com os serviços operacionais. Segue um resumo com os principais conceitos utilizados para garantir a disponibilidade [(Cockroach Labs 2020b)](#Cockroach-2020b):
 
@@ -174,12 +176,12 @@ Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal
 * **Disponibilidade Multi-ativa**: O consenso de alta disponibilidade permite que cada nó no *cluster* controle leituras e gravações para um subconjunto dos dados armazenados (em uma base por intervalo).
 
 <a id="resiliencia"></a>
-## Resiliência a Falhas
+## 3. Resiliência a Falhas
 
 A confiabiliade de um sistema gerenciador de banco de dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
 
 <a id="resiliencia-mysqlcluster"></a>
-### MySQL Cluster
+### 3.1. MySQL Cluster
 
 No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós *SQL*, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
 
@@ -189,7 +191,7 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 </p>
 
 <a id="resiliencia-cockroachdb"></a>
-### CockroachDB
+### 3.2. CockroachDB
 
 No mínimo de três computadores (3 nós) para executar um *cluster* viável, quando você estiver pronto para executar o seu sistema em produção em uma única região. É importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [(Cockroach 2020c)](#Cockroach-2020c).
 
@@ -198,13 +200,15 @@ No mínimo de três computadores (3 nós) para executar um *cluster* viável, qu
 <br>Figura 3: Topologia Básica. Fonte: (Cockroach 2020c)</br>
 </p>
 
+[Voltar ao índice](#indice)
+
 <a id="instalacao"></a>
-## Instalação e Configuração
+## 4. Instalação e Configuração
 
 A distribuição [Ubuntu](https://ubuntu.com/) 18.04 do Linux será o sitema operacional utilizado em todo o processo de instalação e experimentos deste tutorial. Em meados de 2004 foi lançado a primeira versão do Ubuntu que cresceu e se tornou a mais popular distribuição *Linux Desktop* conhecida por ser considerado um sistema operacional fácil de ser usado. Todos os comandos mostrados ao longo deste tutorial podem ser reproduzidos em qualquer distribuição derivada do [Debian](https://www.debian.org/). É importante lembrar que os bancos de dados **MySQL Cluster** e **CockroachDB** serão instalados no **Docker**.   
 
 <a id="instalacao-docker"></a>
-### Docker
+### 4.1. Docker
 
 O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvolvida na linguagem [go](https://golang.org/). O **Docker** permite criar, testar e implementar aplicações em um ambiente apartado da máquina original conhecido como contâiner. Isso possibilita que qualquer software seja empacotado de maneira padronizada.
 
@@ -273,7 +277,7 @@ Output
 ```
 
 <a id="instalacao-mysqlcluster"></a>
-### MySQL Cluster
+### 4.2. MySQL Cluster
 
 Nesta seção será mostrado o processo de instalação e configuração da versão 8.0 do [MySQL Cluster](https://dev.mysql.com/doc/refman/8.0/en/mysql-cluster.html) no **Docker**. Cada node será executado em *hosts* separados usando a configuração de rede do Docker. Utilizaremos comandos do **git**, se for necessário [clique aqui](https://gist.github.com/leocomelli/2545add34e4fec21ec16) para obter mais detalhes.
 
@@ -484,7 +488,7 @@ mysql> flush privileges;
 **Repita os passos 13 a 17 para o 2° node mysql do cluster.**
 
 <a id="instalacao-cockroachdb"></a>
-### CockroachDB
+### 4.3. CockroachDB
 
 Nesta etapa iremos instalar e configurar a versão 20.2.2 do **CockroachDB** no **Docker**. Cada node será executado em *hosts* separados usando a configuração de rede do Docker.
 
@@ -596,8 +600,10 @@ clusterID:           ‹fc1b7739-d5bd-4e2b-a2b6-6d93ae12bc9a›
 
 **Caso seja necessário, repita o passo 6 para acessar o 2° e 3° node do cockroach.** 
 
+[Voltar ao índice](#indice)
+
 <a id="pratica"></a>
-## Disponibilidade na Prática
+## 5. Disponibilidade na Prática
 
 A disponibilidade é um fator crítico que deve ser considerado ao escolher um banco de dados. Certamente diversos fatores podem influenciar nesta escolha, mas conforme já foi detalhado ao longo deste material temos fatores importantes que tornam o banco de dados mais resiliente e disponível sempre que seja necessário consultar os dados. 
 
@@ -606,7 +612,7 @@ Nas seções anteriores megulhamos em todas as características relevantes dos b
 A disponibilidade do banco de dados é um processo que envolve a melhor escolha possível para o negócio em questão, uma boa definição da arquitetura e infra-estrutura adequada. A partir de agora vamos mostrar a disponibilidade com foco na redundância, já que construimos este caminho tendo uma estrutura resiliente e redundante para os banco de dados deste estudo. 
 
 <a id="pratica-mysqlcluster"></a>
-### MySQL Cluster
+### 5.1. MySQL Cluster
 
 Na seção de [(Alta Disponibilidade)](#disponibilidade), foi mostrado que o MySQL Cluster se apoia na replicação, *failover* automático, autocorreção, arquitetura sem compartilhamento e replicação geográfica para garantir um alto nível de disponibilidade. Acompanhe na prática alguns destes conceitos:
 
@@ -907,7 +913,7 @@ Retorno:
 ```
 
 <a id="pratica-cockroachdb"></a>
-### CockroachDB
+### 5.2. CockroachDB
 
 A replicação, distribuição, rebalanceamento e resiliência automáticos são pontos fortes do CockroachDB para garantir um alto nível de disponibilidade. Vamos ver alguns conceitos na prática:
 
@@ -1139,8 +1145,10 @@ Retorno:
 (1 row)
 ```
 
+[Voltar ao índice](#indice)
+
 <a id="benchmark"></a>
-## Benchmark - MySQL vs CockroachDB
+## 6. Benchmark - MySQL vs CockroachDB
 
 *Benchmarks* provêm um método de comparação da *performance* de vários subsistemas dentre as diferentes arquiteturas de *chips* e sistemas. *Benchmarking* é útil para o entendimento de como o gerenciador de banco de dados responde sob a variação de condições. Pode-se criar cenários que testam o tratamento de *deadlock*, *performance* dos utilitários, diferentes métodos de carregar dados, características da taxa de transição quando mais usuários são adicionados e ainda o efeito na aplicação usando uma nova versão do produto [(Wikipédia 2020a)](#Wikipedia-2020a).
 
@@ -1173,8 +1181,10 @@ Conforme o teste de simultaneidade apresentado acima o MySQL foi superior ao Coc
 
 O desempenho é algo muito complicado de medir em um banco de dados. O desempenho do CockroachDB certamente é afetado por seu modelo de consistência. Em particular, CockroachDB lida com transações usando isolamento serializável e grava usando replicação de consenso.
 
+[Voltar ao índice](#indice)
+
 <a id="conclusao"></a>
-## Conclusão
+## 7. Conclusão
 
 Ao longo deste tutorial foi possível acompanhar todo o processo para prova do conceito de disponibilidade do MySQL Cluster e CockroachDB. Foi apresentado os seguintes processos:
 
@@ -1196,8 +1206,10 @@ Foi respeitado a recomendação da documentação oficial de cada banco de dados
 
 Em resumo os banco de dados escolhidos atenderam o conceito de disponibilidade a partir da arquitetura proposta e nos testes de simultaneidade o MySQL foi muito superior ao CockroachDB.
 
+[Voltar ao índice](#indice)
+
 <a id="referencias"></a>
-# Referências Bibliográficas
+# 8. Referências Bibliográficas
 
 <a id="MySQL-2020a"></a>
 - MySQL. [MySQL CLUSTER, 2020a](https://www.mysql.com/products/cluster/mysql-cluster-datasheet.pdf). Acesso em 14 out 2020 às 19h20m.
