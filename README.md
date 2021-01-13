@@ -40,9 +40,9 @@ A proposta do tutorial é apresentar o passo a passo desde a instalação, confi
 <a id="sobre-mysqlcluster"></a>
 ### 1.1. MySQL Cluster
 
-MySQL Cluster é um banco de dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [(MySQL 2020a)](#MySQL-2020a).
+MySQL Cluster é um banco de dados distribuído que combina escalabilidade linear e alta disponibilidade. Foi projetado para aplicativos de missão crítica, fornece acesso em tempo real na memória com consistência transacional em conjuntos de dados particionados e distribuídos [[1]](#MySQL-2020a).
 
-O Cluster MySQL tem replicação entre *clusters* em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados o que torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [(MySQL 2020a)](#MySQL-2020a).
+O Cluster MySQL tem replicação entre *clusters* em vários locais geográficos integrados e uma arquitetura nada compartilhada com reconhecimento de localidade de dados o que torna a escolha perfeita para execução em hardware comum e em infraestrutura em nuvem distribuída globalmente [[1]](#MySQL-2020a).
 
 <a id="sobre-cockroachdb"></a>
 ### 1.2. CockroachDB
@@ -82,9 +82,9 @@ Os bancos de dados relacionais surguiram para necessidade de armazenamento de da
 
 Com a evolução tecnológica e o astronômico crescimento dos dispositivos móveis conectados a internet abriu caminho para a era da Internet das Coisas e já estamos vivendo mudanças significativas na sociedade. Veja algumas declarações que demonstram tal potencial:
 
-* A  Internet das Coisas será uma revolução muito maior que a internet e os celulares juntos! [(Krco, Srdjan, et al, 2013)](#Krco-2013);
+* A  Internet das Coisas será uma revolução muito maior que a internet e os celulares juntos! [[13]](#Krco-2013);
 
-* A Internet das Coisas representa uma nova inteligência para os negócios, é uma mudança de paradigma do consumo, uma revolução do comportamento humano, um caminho para um novo mundo onde tudo e todos estarão conectados e sem fronteiras. Um caminho para um mundo que ainda não imaginamos [(Dias, 2016)](#Dias-2016).
+* A Internet das Coisas representa uma nova inteligência para os negócios, é uma mudança de paradigma do consumo, uma revolução do comportamento humano, um caminho para um novo mundo onde tudo e todos estarão conectados e sem fronteiras. Um caminho para um mundo que ainda não imaginamos [[14]](#Dias-2016).
 
 A partir destes desafios surgiram os novos sistemas de banco de dados nomeados como *NoSQL* (*Not Only SQL*). Estas soluções fornecem alta disponbilidade, escalabilidade e uma arquitetura distribuída com crescimento horizontal. Mesmo sendo capaz de manipular grandes quantidades de dados, os banco de dados *NoSQL* geralmente não possuem suporte para as propriedades *ACID*:
 
@@ -96,9 +96,9 @@ A partir destes desafios surgiram os novos sistemas de banco de dados nomeados c
 
 * **D**urability: Garante os dados disponíveis em definitivo.
 
-Para quebrar alguns paradgimas foi criado os sistemas de banco de dados *NewSQL* que combinam funcionalidades do modelo relacional e *NoSQL*. Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) os sistemas *NewSQL* são soluções modernas que buscam prover o mesmo desempenho escalável dos bancos de dados *NoSQL* para cargas de trabalho *OLTP* com tı́pico suporte completo a todas as propriedades *ACID*, como encontrado nos banco de dados relacionais.
+Para quebrar alguns paradgimas foi criado os sistemas de banco de dados *NewSQL* que combinam funcionalidades do modelo relacional e *NoSQL*. Segundo [[15]](#Pavlo-2016) os sistemas *NewSQL* são soluções modernas que buscam prover o mesmo desempenho escalável dos bancos de dados *NoSQL* para cargas de trabalho *OLTP* com tı́pico suporte completo a todas as propriedades *ACID*, como encontrado nos banco de dados relacionais.
 
-Os sistemas de banco de dados *NewSQL* são adequados para aplicações que utilizavam o *SGBD* tradicional, mas que surgiu a necessidade de escalabilidade adicional e aprimoramento de desempenho [(YUAN, et al, 2015)](#Yuan-2015).
+Os sistemas de banco de dados *NewSQL* são adequados para aplicações que utilizavam o *SGBD* tradicional, mas que surgiu a necessidade de escalabilidade adicional e aprimoramento de desempenho [[16]](#Yuan-2015).
 
 Os sistemas de banco de dados *NewSQL* tem como característica a execução de transações de leitura e gravação que:
 
@@ -110,7 +110,7 @@ Os sistemas de banco de dados *NewSQL* tem como característica a execução de 
 
 * Possuem consultas repetidas com diferentes entradas.
 
-De acordo com [Pavlo e Aslett, 2016](#Pavlo-2016) pode existir uma caracterização mais restrita com a implementação de um sistema de banco de dados *NewSQL* que utiliza:
+De acordo com [[15]](#Pavlo-2016) pode existir uma caracterização mais restrita com a implementação de um sistema de banco de dados *NewSQL* que utiliza:
 
 * Um esquema de controle de simultaneidade sem bloqueio;
 
@@ -128,15 +128,15 @@ De acordo com [Pavlo e Aslett, 2016](#Pavlo-2016) pode existir uma caracterizaç
 
 5. Uma arquitetura de escala, não compartilhada, capaz de funcionar em um grande número de nós sem sofrerem estrangulamentos.
 
-Segundo [Pavlo e Aslett, 2016](#Pavlo-2016) as três categorias que melhor representam os sistemas de banco de dados *NewSQL* são:
+Segundo [[15]](#Pavlo-2016) as três categorias que melhor representam os sistemas de banco de dados *NewSQL* são:
 
 1. Sistemas inovadores construídos a partir do zero usando uma nova arquitetura;
 
 2. *Middleware* que re-implementam a mesma infra-estrutura que foi desenvolvida na década de 2000 pelo Google e outros;
-   
+
 3. Ofertas de banco de dados como serviço de provedores de computação em nuvem que também são baseadas em novas arquiteturas.
 
-Certamente podemos considerar que os sistemas de banco de dados *NewSQL* conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [KAUR, 2017](#Kaur-2017) o *NewSQL* deve ser considerado como uma alternativa ao *NoSQL* ou banco de dados relacional clássico para novos aplicativos *OLTP*.
+Certamente podemos considerar que os sistemas de banco de dados *NewSQL* conseguem resolver os principais problemas de escalabilidade, desempenho e disponibilidade que temos no sistema relacional tradicional. Segundo [[17]](#Kaur-2017) o *NewSQL* deve ser considerado como uma alternativa ao *NoSQL* ou banco de dados relacional clássico para novos aplicativos *OLTP*.
 
 <a id="disponibilidade"></a>
 ## 2.1. Alta Disponibilidade
@@ -146,7 +146,7 @@ A alta disponibilidade não está relacionada somente ao tempo que um sistema es
 <a id="disponibilidade-mysqlcluster"></a>
 ### 2.1.1. MySQL Cluster
 
-Para garantir a alta disponibilidade o MySQL Cluster se apoia em [(MySQL 2020b)](#MySQL-2020b):
+Para garantir a alta disponibilidade o MySQL Cluster se apoia em [[2]](#MySQL-2020b):
 
 * **Replicação síncrona**: Os dados em cada nó de dados são replicados de forma síncrona para outro nó de dados;
 
@@ -178,12 +178,12 @@ Para o CockroachDB escalar os serviços horizontalmente é fundamental, para tal
 <a id="resiliencia"></a>
 ## 3. Resiliência a Falhas
 
-A confiabiliade de um sistema gerenciador de banco de dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [Silberschatz, 2006](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
+A confiabiliade de um sistema gerenciador de banco de dados tem um relação direta com a resiliência a falhas e redundância dos dados. Segundo [[19]](#Silberschatz-2006) a solução para o problema de confiabilidade é introduzir a redundância; ou seja, armazenamos informações extras que normalmente não são necessárias, mas que podem ser usadas no caso de falha de um disco, para recriar a informação perdida. Assim, mesmo que um disco falhe os dados não são perdidos [...]
 
 <a id="resiliencia-mysqlcluster"></a>
 ### 3.1. MySQL Cluster
 
-No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós *SQL*, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [(MySQL 2020c)](#MySQL-2020c).
+No mínimo de três computadores para executar um cluster viável. No entanto, o número mínimo recomendado de computadores em um Mysql Cluster NDB é quatro: um para cada para executar o gerenciamento e os nós *SQL*, e dois computadores para servir como nós de dados. O objetivo dos dois nós de dados é fornecer redundância; o nó de gerenciamento deve ser executado em uma máquina separada para garantir serviços de arbitragem contínuos no caso de um dos nós de dados falhar [[4]](#MySQL-2020c).
 
 <p align="center">
 <img src="./images/mysql_cluster_availability_v1.png" width="867">
@@ -193,7 +193,7 @@ No mínimo de três computadores para executar um cluster viável. No entanto, o
 <a id="resiliencia-cockroachdb"></a>
 ### 3.2. CockroachDB
 
-No mínimo de três computadores (3 nós) para executar um *cluster* viável, quando você estiver pronto para executar o seu sistema em produção em uma única região. É importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [(Cockroach 2020c)](#Cockroach-2020c).
+No mínimo de três computadores (3 nós) para executar um *cluster* viável, quando você estiver pronto para executar o seu sistema em produção em uma única região. É importante implantar pelo menos 3 nós do CockroachDB para aproveitar as vantagens dos recursos de replicação, distribuição, rebalanceamento e resiliência automáticos [[7]](#Cockroach-2020c).
 
 <p align="center">
 <img src="./images/topology_basic_production_v1.png" width="960">
@@ -217,7 +217,7 @@ O [Docker](https://www.docker.com/) é uma plataforma de código aberto desenvol
 <br>Figura 4: Docker logo. Fonte: (Docker 2020a)</br>
 </p>
 
-Siga as instruções abaixo para instalação [(Digitalocean 2020a)](#Digitalocean-2020a).
+Siga as instruções abaixo para instalação [[10]](#Digitalocean-2020a).
 
 1. Execute o comando de atualização para garantir as listas de fontes mais recentes:
 
@@ -293,7 +293,7 @@ Ao final do processo teremos 1 node de gerenciamento, 2 nodes de dados e 2 nodes
 <br>Figura 6: NDB Cluster Diagram. Fonte: (Medium 2020a)</br>
 </p>
 
-Siga os passos abaixo para instalação e configuração do MySQL Cluster [(Medium 2020a)](#Medium-2020a).
+Siga os passos abaixo para instalação e configuração do MySQL Cluster [[11]](#Medium-2020a).
 
 1. Configure a *subnet* no Docker:
 
@@ -504,7 +504,7 @@ Ao final do processo teremos 3 nodes e cada node terá uma instância de banco d
 <br>Figura 8: Start a Cluster in Docker. Fonte: (Cockroach 2020c)</br>
 </p>
 
-Aplique a sequência de comandos abaixo para ter todos os nodes em operacão [(Cockroach 2020c)](#Cockroach-2020c).
+Aplique a sequência de comandos abaixo para ter todos os nodes em operacão [[7]](#Cockroach-2020c).
 
 1. Baixe a imagem do cockroachdb no Docker:
 
@@ -1150,9 +1150,9 @@ Retorno:
 <a id="benchmark"></a>
 ## 6. Benchmark - MySQL vs CockroachDB
 
-*Benchmarks* provêm um método de comparação da *performance* de vários subsistemas dentre as diferentes arquiteturas de *chips* e sistemas. *Benchmarking* é útil para o entendimento de como o gerenciador de banco de dados responde sob a variação de condições. Pode-se criar cenários que testam o tratamento de *deadlock*, *performance* dos utilitários, diferentes métodos de carregar dados, características da taxa de transição quando mais usuários são adicionados e ainda o efeito na aplicação usando uma nova versão do produto [(Wikipédia 2020a)](#Wikipedia-2020a).
+*Benchmarks* provêm um método de comparação da *performance* de vários subsistemas dentre as diferentes arquiteturas de *chips* e sistemas. *Benchmarking* é útil para o entendimento de como o gerenciador de banco de dados responde sob a variação de condições. Pode-se criar cenários que testam o tratamento de *deadlock*, *performance* dos utilitários, diferentes métodos de carregar dados, características da taxa de transição quando mais usuários são adicionados e ainda o efeito na aplicação usando uma nova versão do produto [[20]](#Wikipedia-2020a).
 
-Para este estudo de caso vamos utilizar um teste prático de simultaneidade de operações publicado no github [(Caleblloyd 2020a)](#caleblloyd-2020a). Caso tenha o MySQL e CockroachDB é possível reproduzir os mesmos testes baixando os *scripts* disponibilizados no repositório. Acompanhe os resultados obtidos:
+Para este estudo de caso vamos utilizar um teste prático de simultaneidade de operações publicado no github [[5]](#caleblloyd-2020a). Caso tenha o MySQL e CockroachDB é possível reproduzir os mesmos testes baixando os *scripts* disponibilizados no repositório. Acompanhe os resultados obtidos:
 
 - 10 conexões simultâneas. O resultado é o total de **segundos** necessário para finalizar todas as operações.
 
@@ -1212,65 +1212,65 @@ Em resumo os banco de dados escolhidos atenderam o conceito de disponibilidade a
 # 8. Referências Bibliográficas
 
 <a id="MySQL-2020a"></a>
-- MySQL. [MySQL CLUSTER, 2020a](https://www.mysql.com/products/cluster/mysql-cluster-datasheet.pdf). Acesso em 14 out 2020 às 19h20m.
+1. MySQL. [MySQL CLUSTER, 2020a](https://www.mysql.com/products/cluster/mysql-cluster-datasheet.pdf). Acesso em 14 out 2020 às 19h20m.
 
 <a id="MySQL-2020b"></a>
-- MySQL. [MySQL CLUSTER, 2020b](https://www.mysql.com/products/cluster/availability.html). Acesso em 17 out 2020 às 11h00m.
+2. MySQL. [MySQL CLUSTER, 2020b](https://www.mysql.com/products/cluster/availability.html). Acesso em 17 out 2020 às 11h00m.
 
 <a id="MySQL-2020c"></a>
-- MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
+3. MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
 
 <a id="MySQL-2020c"></a>
-- MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
+4. MySQL. [Appendix A MySQL 5.7 FAQ: NDB Cluster, 2020c](https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/faqs-mysql-cluster.html). Acesso em 17 out 2020 às 18h15m.
   
 <a id="Caleblloyd-2020a"></a>
-- Caleb Lloyd. [Concurrency Benchmark Results, 2020a](https://github.com/caleblloyd/MySqlCockroachBench/wiki/Concurrency-Benchmark-Results). Acesso em 30 dez 2020 às 10h30m.
+5. Caleb Lloyd. [Concurrency Benchmark Results, 2020a](https://github.com/caleblloyd/MySqlCockroachBench/wiki/Concurrency-Benchmark-Results). Acesso em 30 dez 2020 às 10h30m.
 
 <a id="Cockroach-2020b"></a>
-- Cockroach Labs. [Architecture Overview, 2020b](https://www.cockroachlabs.com/docs/stable/architecture/overview.html). Acesso em 17 out 2020 às 15h30m.
+6. Cockroach Labs. [Architecture Overview, 2020b](https://www.cockroachlabs.com/docs/stable/architecture/overview.html). Acesso em 17 out 2020 às 15h30m.
 
 <a id="Cockroach-2020c"></a>
-- Cockroach Labs. [Start a Cluster in Docker, 2020c](https://www.cockroachlabs.com/docs/v20.2/start-a-local-cluster-in-docker-linux). Acesso em 04 dez 2020 às 19h10m.
+7. Cockroach Labs. [Start a Cluster in Docker, 2020c](https://www.cockroachlabs.com/docs/v20.2/start-a-local-cluster-in-docker-linux). Acesso em 04 dez 2020 às 19h10m.
 
 <a id="YugabyteDB-2020a"></a>
-- YugabyteDB. [YugabyteDB, 2020a](https://docs.yugabyte.com/latest/sample-data/northwind/). Acesso em 29 dez 2020 às 10h15m.
+8. YugabyteDB. [YugabyteDB, 2020a](https://docs.yugabyte.com/latest/sample-data/northwind/). Acesso em 29 dez 2020 às 10h15m.
 
 <a id="Docker-2020a"></a>
-- Docker. [Docker, 2020a](https://www.docker.com/). Acesso em 29 dez 2020 às 10h50m.
+9. Docker. [Docker, 2020a](https://www.docker.com/). Acesso em 29 dez 2020 às 10h50m.
   
 <a id="Digitalocean-2020a"></a>
-- Digitalocean. [Digitalocean, 2020a](https://www.digitalocean.com/community/tutorials/como-instalar-e-usar-o-docker-no-ubuntu-18-04-pt). Acesso em 29 dez 2020 às 11h00m.
+10. Digitalocean. [Digitalocean, 2020a](https://www.digitalocean.com/community/tutorials/como-instalar-e-usar-o-docker-no-ubuntu-18-04-pt). Acesso em 29 dez 2020 às 11h00m.
 
 <a id="Medium-2020a"></a>
-- Medium. [Medium, 2020a](https://medium.com/@menakajayawardena/how-to-deploy-a-mysql-cluster-from-scratch-with-docker-a2452a56fc33). Acesso em 30 dez 2020 às 13h45m.
+11. Medium. [Medium, 2020a](https://medium.com/@menakajayawardena/how-to-deploy-a-mysql-cluster-from-scratch-with-docker-a2452a56fc33). Acesso em 30 dez 2020 às 13h45m.
 
 <a id="GithubGist-2020a"></a>
-- GithubGist. [GithubGist, 2020a](https://gist.github.com/leocomelli/2545add34e4fec21ec16). Acesso em 30 dez 2020 às 14h05m.
+12. GithubGist. [GithubGist, 2020a](https://gist.github.com/leocomelli/2545add34e4fec21ec16). Acesso em 30 dez 2020 às 14h05m.
   
 <a id="Krco-2013"></a>
-- Krco, Srdjan, et al. [Comic book](https://iotcomicbook.files.wordpress.com/2013/10/iot_comic_book_special_br.pdf). The internet of things, 2012, p. 15. Acesso em 21 dez 2020 às 21h10m.
+13. Krco, Srdjan, et al. [Comic book](https://iotcomicbook.files.wordpress.com/2013/10/iot_comic_book_special_br.pdf). The internet of things, 2012, p. 15. Acesso em 21 dez 2020 às 21h10m.
   
 <a id="Dias-2016"></a>
-- Dias, Renata Rapim de Freitas. Internet das Coisas sem Mistérios: Uma nova
+14. Dias, Renata Rapim de Freitas. Internet das Coisas sem Mistérios: Uma nova
 inteligência para os negócios. São Paulo: Netpress Books, 2016.
 
-<a id="[Pavlo-2016"></a>
-- Pavlo, A. and Aslett. What’s really new with newsql? SIGMOD Rec., 45(2), 2016.
+<a id="Pavlo-2016"></a>
+15. Pavlo, A. and Aslett. What’s really new with newsql? SIGMOD Rec., 45(2), 2016.
 
-<a id="[Yuan-2015"></a>
-- YUAN, L.-Y.; WU, L.; YOU, J.-H.; CHI, Y.  A demonstration of rubato db: A highly scalable
+<a id="Yuan-2015"></a>
+16. YUAN, L.-Y.; WU, L.; YOU, J.-H.; CHI, Y.  A demonstration of rubato db: A highly scalable
 newsql database system for oltp and big data applications. In: ACM. Proceedings of the 2015
 ACM SIGMOD International Conference on Management of Data. [S.l.], 2015. p. 907–912.
 
-<a id="[Kaur-2017"></a>
-- KAUR, K.; SACHDEVA, M.  Performance evaluation of newsql databases. In: IEEE. Inventive
+<a id="Kaur-2017"></a>
+17. KAUR, K.; SACHDEVA, M.  Performance evaluation of newsql databases. In: IEEE. Inventive
 Systems and Control (ICISC), 2017 International Conference on. [S.l.], 2017. p. 1–5.
 
 <a id="STONEBRAKER-2011"></a>
-- STONEBRAKER, Michael, CATTELL, [Rick. 10 Rules for Scalable Performance in ‘Simple Operation’ Datastores](https://doi.org/10.1145/1953122.1953144). Communications Of The Acm, v. 54, n. 6, p. 72-80, jun. 2011.
+18. STONEBRAKER, Michael, CATTELL, [Rick. 10 Rules for Scalable Performance in ‘Simple Operation’ Datastores](https://doi.org/10.1145/1953122.1953144). Communications Of The Acm, v. 54, n. 6, p. 72-80, jun. 2011.
 
-<a id="[Silberschatz-2006"></a>
-- SILBERSCHATZ, A.; KORTH, H. F.; SUDARSHAN, S. Sistema de banco de dados. 5 ed. Rio de Janeiro: Elsevier, 2006. p. 300.
+<a id="Silberschatz-2006"></a>
+19. SILBERSCHATZ, A.; KORTH, H. F.; SUDARSHAN, S. Sistema de banco de dados. 5 ed. Rio de Janeiro: Elsevier, 2006. p. 300.
 
 <a id="Wikipedia-2020a"></a>
-- Wikipédia. [Benchmark (computação), 2020a](https://pt.wikipedia.org/wiki/Benchmark_(computa%C3%A7%C3%A3o)). Acesso em 03 dec 2020 às 19h10m.
+20. Wikipédia. [Benchmark (computação), 2020a](https://pt.wikipedia.org/wiki/Benchmark_(computa%C3%A7%C3%A3o)). Acesso em 03 dec 2020 às 19h10m.
